@@ -1,5 +1,14 @@
 <?php
 
+	session_start();
+	
+	if (!isset($_SESSION['userId']))
+	{
+		http_response_code(401);
+		echo json_encode(["error" => "Not logged in"]);
+		exit;
+	}
+
 	$inData = getRequestInfo();
 	
 	$searchResults = "";
@@ -8,13 +17,14 @@
 	$conn = new mysqli("localhost", "TheBeast", "WeLoveCOP4331", "small_project_test");
 	if ($conn->connect_error) 
 	{
-		returnWithError( $conn->connect_error );
+		//	returnWithError( $conn->connect_error );
+		returnWithError("Connection failed");
 	} 
 	else
 	{
 		$stmt = $conn->prepare("select * from Contacts where (FirstName like ? OR LastName like?) and UserID=?");
 		$contactName = "%" . $inData["search"] . "%";
-		$stmt->bind_param("sss", $contactName, $contactName, $inData["userId"]);
+		$stmt->bind_param("ssi", $contactName, $contactName, $_SESSION['userId']);
 		$stmt->execute();
 		
 		$result = $stmt->get_result();
@@ -26,12 +36,12 @@
 				$searchResults .= ",";
 			}
 			$searchCount++;
-			$searchResults .= '{"FirstName" : "' . $row["FirstName"] . '", "LastName" : "' . $row["LastName"] . '", "Email" : "' . $row["Email"] . '", "Phone" : "' . $row["Phone"] . '"}';
+			$searchResults .= '{"id" : "' . $row["ID"] .  '", "FirstName" : "' . $row["FirstName"] . '", "LastName" : "' . $row["LastName"] . '", "Email" : "' . $row["Email"] . '", "Phone" : "' . $row["Phone"] . '"}';
 		}
 		
 		if( $searchCount == 0 )
 		{
-			returnWithError( "No Records Found" );
+			returnWithError(200);
 		}
 		else
 		{
@@ -55,7 +65,7 @@
 	
 	function returnWithError( $err )
 	{
-		$retValue = '{"id":0,"firstName":"","lastName":"","error":"' . $err . '"}';
+		$retValue = '{"results":[],"error": ' . $err . '}';
 		sendResultInfoAsJson( $retValue );
 	}
 	

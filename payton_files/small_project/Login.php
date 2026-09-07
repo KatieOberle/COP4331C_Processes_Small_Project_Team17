@@ -1,5 +1,6 @@
 <?php
-
+	// Start session for ID handling
+	session_start();
 	$inData = getRequestInfo();
 	
 	$id = 0;
@@ -13,14 +14,24 @@
 	}
 	else
 	{
-		$stmt = $conn->prepare("SELECT ID,firstName,lastName FROM Users WHERE Login=? AND Password =?");
-		$stmt->bind_param("ss", $inData["login"], $inData["password"]);
+		// Get the ID, name, and HASHED password that match the login
+		$stmt = $conn->prepare("SELECT ID,firstName,lastName,Password FROM Users WHERE Login=?");
+		$stmt->bind_param("s", $inData["login"]);
 		$stmt->execute();
 		$result = $stmt->get_result();
 
 		if( $row = $result->fetch_assoc()  )
 		{
-			returnWithInfo( $row['firstName'], $row['lastName'], $row['ID'] );
+			// Verify that the input password matches the hashed password
+			$verify = password_verify($inData["password"], $row['Password']);
+
+			if($verify)
+			{
+				$_SESSION['userId'] = $row['ID'];
+				returnWithInfo( $row['firstName'], $row['lastName'], $row['ID'] );
+			}
+			else
+				returnWithError("Wrong Password!");
 		}
 		else
 		{
@@ -30,7 +41,7 @@
 		$stmt->close();
 		$conn->close();
 	}
-	
+
 	function getRequestInfo()
 	{
 		return json_decode(file_get_contents('php://input'), true);

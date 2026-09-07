@@ -4,7 +4,9 @@
 	$firstName = $inData["firstName"];
 	$lastName = $inData["lastName"];
 	$login = $inData["login"];
-	$password = $inData["password"];
+
+	// Hash the input password
+	$password = password_hash($inData["password"], PASSWORD_BCRYPT);
 
 	$conn = new mysqli("localhost", "TheBeast", "WeLoveCOP4331", "small_project_test");
 	if ($conn->connect_error) 
@@ -13,6 +15,7 @@
 	} 
 	else
 	{
+		// Create a user with the input information (the ID is handled as an AUTO_INCREMENT)
 		$stmt = $conn->prepare("INSERT into Users (FirstName,LastName,Login,Password) VALUES(?,?,?,?)");
 		$stmt->bind_param("ssss", $firstName, $lastName, $login, $password);
 		$stmt->execute();

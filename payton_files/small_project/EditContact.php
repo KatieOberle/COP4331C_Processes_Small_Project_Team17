@@ -13,7 +13,12 @@ $inData = getRequestInfo();
 
 // 3. Read input fields
 $contactId     = trim($inData['id'] ?? '');
+$firstName = trim($inData['firstName'] ?? '');
+$lastName = trim($inData['lastName'] ?? '');
+$email = trim($inData['email'] ?? '');
+$phone = trim($inData['phone'] ?? '');
 $userId    = $_SESSION['userId'];
+$dateCreated = '';
 
 // 4. Input validation
 if($contactId === '')
@@ -34,7 +39,7 @@ if($conn->connect_error)
     exit();
 }
 
-$stmt = $conn->prepare("DELETE FROM Contacts WHERE ID=? AND userId=?");
+$stmt = $conn->prepare("SELECT * FROM Contacts WHERE ID=? AND UserID=?");
 
 if(!$stmt)
 {
@@ -57,34 +62,27 @@ if(!$stmt->execute())
     exit();
 }
 
-// Reset AUTO_INCREMENT to lowest number
-$stmt = $conn->prepare("SELECT MAX(ID) FROM Contacts");
-
-if(!$stmt)
-{
-    http_response_code(500);
-    error_log($conn->error);
-    sendJson(["error" => "Server error"]);
-    $conn->close();
-    exit();
-}
-
-if(!$stmt->execute())
-{
-    http_response_code(500);
-        error_log($stmt->error);
-    sendJson(["error" => "Server error"]);
-    $stmt->close();
-    $conn->close();
-    exit();
-}
-
+// Get current data for selected contact
 $result = $stmt->get_result();
 
+// Store current data for all empty entries
 if( $row = $result->fetch_assoc()  )
 {
-	$nextId = $row['ID'] + 1;
-	$stmt = $conn->prepare("ALTER TABLE Contacts AUTO_INCREMENT=$nextId");
+	if($firstName === '')
+		$firstName = $row['FirstName'];
+	if($lastName === '')
+		$lastName = $row['LastName'];
+	if($email === '')
+		$email = $row['Email'];
+	if($phone === '')
+		$phone = $row['Phone'];
+	$dateCreated = $row['DateCreated'];
+}
+
+// Prepare update statement, then execute
+$stmt = $conn->prepare("UPDATE Contacts 
+	SET FirstName=?, LastName=?, Email=?, Phone=?
+	WHERE ID=? AND userId=?");
 
 if(!$stmt)
 {
@@ -95,23 +93,30 @@ if(!$stmt)
     exit();
 }
 
+$stmt->bind_param("ssssii", $firstName, $lastName, $email, $phone, $contactId, $_SESSION['userId']);
+
 if(!$stmt->execute())
 {
     http_response_code(500);
-        error_log($stmt->error);
+	error_log($stmt->error);
     sendJson(["error" => "Server error"]);
     $stmt->close();
     $conn->close();
     exit();
 }
 
-}
-
-$conn->close();
 http_response_code(201);
 sendJson([
-    "id"          => $contactId
+    "id"          => $contactId,
+    "firstName"   => $firstName,
+    "lastName"    => $lastName,
+    "email"       => $email,
+    "phone"       => $phone,
+    "dateCreated" => $dateCreated
 ]);
+
+
+$conn->close();
 
 // Helper Functions
 function getRequestInfo()

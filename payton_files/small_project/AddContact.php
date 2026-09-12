@@ -12,11 +12,14 @@ if(!isset($_SESSION['userId']))
 $inData = getRequestInfo();
 
 // 3. Read input fields
-$contactId     = trim($inData['id'] ?? '');
+$firstName = trim($inData['firstName'] ?? '');
+$lastName  = trim($inData['lastName'] ?? '');
+$email     = trim($inData['email'] ?? '');
+$phone     = trim($inData['phone'] ?? '');
 $userId    = $_SESSION['userId'];
 
 // 4. Input validation
-if($contactId === '')
+if($firstName === '' || $lastName === '' || ($email === '' && $phone === ''))
 {
     http_response_code(400);
     sendJson(["error" => "Missing required field"]);
@@ -34,7 +37,8 @@ if($conn->connect_error)
     exit();
 }
 
-$stmt = $conn->prepare("DELETE FROM Contacts WHERE ID=? AND userId=?");
+// 5. Prepared INSERT statement for 5 columns (DateCreated handled by DB default)
+$stmt = $conn->prepare("INSERT INTO Contacts (FirstName, LastName, Email, Phone, UserID) VALUES (?, ?, ?, ?, ?)");
 
 if(!$stmt)
 {
@@ -45,7 +49,7 @@ if(!$stmt)
     exit();
 }
 
-$stmt->bind_param("ii", $contactId, $_SESSION['userId']);
+$stmt->bind_param("ssssi", $firstName, $lastName, $email, $phone, $userId);
 
 if(!$stmt->execute())
 {
@@ -57,8 +61,12 @@ if(!$stmt->execute())
     exit();
 }
 
-// Reset AUTO_INCREMENT to lowest number
-$stmt = $conn->prepare("SELECT MAX(ID) FROM Contacts");
+// 6. Capture the newly created auto-increment ID
+$newId = (int)$conn->insert_id;
+$stmt->close();
+
+// 7. Query the row back to obtain DateCreated
+$stmt = $conn->prepare("SELECT DateCreated FROM Contacts WHERE ID = ?");
 
 if(!$stmt)
 {
@@ -69,10 +77,12 @@ if(!$stmt)
     exit();
 }
 
+$stmt->bind_param("i", $newId);
+
 if(!$stmt->execute())
 {
     http_response_code(500);
-        error_log($stmt->error);
+    error_log($stmt->error);
     sendJson(["error" => "Server error"]);
     $stmt->close();
     $conn->close();
@@ -81,36 +91,23 @@ if(!$stmt->execute())
 
 $result = $stmt->get_result();
 
-if( $row = $result->fetch_assoc()  )
+$dateCreated = null;
+if($row = $result->fetch_assoc())
 {
-	$nextId = $row['ID'] + 1;
-	$stmt = $conn->prepare("ALTER TABLE Contacts AUTO_INCREMENT=$nextId");
-
-if(!$stmt)
-{
-    http_response_code(500);
-    error_log($conn->error);
-    sendJson(["error" => "Server error"]);
-    $conn->close();
-    exit();
+    $dateCreated = $row['DateCreated'];
 }
-
-if(!$stmt->execute())
-{
-    http_response_code(500);
-        error_log($stmt->error);
-    sendJson(["error" => "Server error"]);
-    $stmt->close();
-    $conn->close();
-    exit();
-}
-
-}
-
+$stmt->close();
 $conn->close();
+
+// 8. Return created contact payload
 http_response_code(201);
 sendJson([
-    "id"          => $contactId
+    "id"          => $newId,
+    "firstName"   => $firstName,
+    "lastName"    => $lastName,
+    "email"       => $email,
+    "phone"       => $phone,
+    "dateCreated" => $dateCreated
 ]);
 
 // Helper Functions

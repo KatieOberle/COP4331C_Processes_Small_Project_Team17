@@ -39,7 +39,7 @@ CREATE TABLE `Users` (
 
 LOCK TABLES `Users` WRITE;
 /*!40000 ALTER TABLE `Users` DISABLE KEYS */;
-INSERT INTO `Users` VALUES (1,'Aashish','Yadavally','AYadavally','35e1ffe59770fa73bbc7f666e082e31cf487ee58b7a199869d537ee8b1954d75'),(2,'Sam','Hill','SamH','eddef9e8e578c2a560c3187c4152c8b6f3f90c1dcf8c88b386ac1a9a96079c2c');
+INSERT INTO `Users` VALUES (1,'Aashish','Yadavally','AYadavally','$2y$10$X/thXBcXZDlK5Vt3/N6jBuQ4LjqHCVad7qC2qM.f1iptFp26oagkO'),(2,'Sam','Hill','SamH','$2y$10$VP2MJkNnU7.WAxb5ceKPlOcwBFwf0deswYlE7R47SBVwyKuL8S0ye');
 /*!40000 ALTER TABLE `Users` ENABLE KEYS */;
 UNLOCK TABLES;
 

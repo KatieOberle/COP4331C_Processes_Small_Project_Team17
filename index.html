@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Contact Manager - Login</title>
+
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+
+
+<body>
+
+    <!-- MEME INTRO SCREEN -->
+    <div id="introScreen">
+
+        <img
+            id="flyingMeme"
+            src="images/meme.png"
+            alt="Flying Meme"
+        >
+
+    </div>
+
+
+
+    <!-- LOGIN PAGE -->
+    <div id="mainContent" class="hidden">
+
+        <div class="auth-container">
+
+            <div class="auth-card">
+
+                <h1>
+                    Contact Manager 
+                </h1>
+
+                <p class="subtitle">
+                    Sign in to manage your contacts
+                </p>
+
+
+                <div class="form-group">
+
+                    <label for="loginName">
+                        Username
+                    </label>
+
+                    <input
+                        type="text"
+                        id="loginName"
+                        placeholder="Enter username"
+                    >
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label for="loginPassword">
+                        Password
+                    </label>
+
+                    <input
+                        type="password"
+                        id="loginPassword"
+                        placeholder="Enter password"
+                    >
+
+                </div>
+
+
+                <button onclick="doLogin()">
+                    Login
+                </button>
+
+
+                <p id="loginResult"></p>
+
+
+                <p class="switch-page">
+
+                    Don't have an account?
+
+                    <a href="register.html">
+                        Register
+                    </a>
+
+                </p>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <script src="js/code.js"></script>
+
+</body>
+
+</html>
+

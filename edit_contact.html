@@ -1,134 +1,91 @@
 <!doctype html>
 <html lang="en">
   <head>
+    <!-- AI transparency: followed HTML template provided by Codex, modified accordingly to add features -->
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /> <!--width and scaling across different devices-->
     <title>Edit Contact | Contact Manager</title>
-    <link rel="stylesheet" href="styles.css" />
+    <link rel="stylesheet" href="css/styles.css" /> <!-- Katie: changed directory to frontend theme -->
   </head>
 
   <body>
-    <header class="site-header">
-      <a class="brand" href="contact-manager.html">
-        Contact<span>Manager</span>
-      </a>
+    <!--Katie: including class pages to interconnect frontend-->
+    <header class="navbar">
+      <!--Katie: switched template navigator to established navigator and return button to escape edit page-->
+      <h2>Contact Manager</h2>
+      <button onclick="window.location.href='contacts.html'">Return to Contacts</button> <!--return to contacts page-->
+      </header>
 
-      <nav class="nav" aria-label="Main navigation">
-        <a href="contact-manager.html">All contacts</a>
-        <a href="add-contact.html">Add contact</a>
-      </nav>
-    </header>
+      <main class="dashboard"> <!--Katie: included dash page centered instead of template main-->
+        <div class="auth-card"> 
+          <h1 id="edit_contact_title">Edit Contact: </h1>
+          <!--Update contact info-->
+          <form id="edit_contact_form" novalidate>
+            <div class="form-group">
+              <label id="first_name_label" for="first_name_interactive">First name</label> <!--Katie: implement working first name label-->
+              <input
+                id="first_name_interactive"
+                name="firstName"
+                type="text"
+                value="First"
+                autocomplete="given-name"
+                required 
+              />
+              </div>
 
-    <main class="page-content">
-      <section class="form-section" aria-labelledby="edit_contact_title">
-        <p class="eyebrow">Contact details</p>
+            <div class="form-group">
+            <!--Katie: edit last name now compatible-->
+              <label id="last_name_label" for="last_name_interactive">Last name</label>
+              <input
+                id="last_name_interactive"
+                name="lastName"
+                type="text"
+                value="Last"
+                autocomplete="family-name"
+                required
+              />
+            </div>
+            <!--Katie: connect phone number field-->
+            <div class="form-group">
+              <label id="phone_number_label" for="phone_number">Phone number</label>
+              <!--Katie: tel instead of text-->
+              <input
+                id="phone_number"
+                name="phoneNumber"
+                type="tel" 
+                value="000-000-0000"
+                autocomplete="tel"
+                placeholder="000-000-0000"
+              />
+            </div>
 
-        <!-- JavaScript changes this title while the name is edited. -->
-        <h1 id="edit_contact_title">Edit Contact: Ada Lovelace</h1>
+            <!--Katie: new email field entry-->
+            <div class="form-group">
+              <label id="email_label" for="email">Email address</label>
+              <input
+                id="email"
+                name="Email"
+                type="email"
+                value="email@example.com"
+                autocomplete="email"
+                placeholder="name@example.com"
+              />
+            </div>
 
-        <p class="lead">
-          Update this contact’s information, then save your changes.
-        </p>
+            <!--Katie: implement/edit last updated date from template-->
+            <p class="last-updated">
+              Last updated: <time id="last_updated" datetime="">Not saved yet</time>
+            </p>
 
-        <!-- novalidate is optional; remove it to use the browser's default validation messages. -->
-        <form id="edit_contact_form" novalidate>
-          <div class="form-group">
-            <label id="first_name_label" for="first_name_interactive">
-              First name
-            </label>
-            <input
-              id="first_name_interactive"
-              name="firstName"
-              type="text"
-              value="Ada"
-              autocomplete="given-name"
-              required
-            />
-          </div>
-
-          <div class="form-group">
-            <label id="last_name_label" for="last_name_interactive">
-              Last name
-            </label>
-            <input
-              id="last_name_interactive"
-              name="lastName"
-              type="text"
-              value="Lovelace"
-              autocomplete="family-name"
-              required
-            />
-          </div>
-
-          <div class="form-group">
-            <label id="phone_number_label" for="phone_number">
-              Phone number
-            </label>
-            <input
-              id="phone_number"
-              name="phoneNumber"
-              type="tel"
-              value="555-123-4567"
-              autocomplete="tel"
-              placeholder="555-123-4567"
-            />
-          </div>
-
-          <div class="form-group">
-            <label id="email_label" for="email">Email address</label>
-            <input
-              id="email"
-              name="email"
-              type="email"
-              value="ada@example.com"
-              autocomplete="email"
-              placeholder="name@example.com"
-            />
-          </div>
-
-          <p class="last-updated">
-            Last updated:
-            <time id="last_updated" datetime="">Not saved yet</time>
-          </p>
-
-          <div class="button-row">
-            <!-- type="button" prevents the form from reloading the page. -->
-            <button id="save_changes_button" class="button" type="button">
-              Save changes
-            </button>
-
-            <button
-              id="cancel_changes_button"
-              class="button button-secondary"
-              type="button"
-            >
-              Cancel
-            </button>
-          </div>
-        </form>
-
-        <!-- JavaScript shows loading, success, and error messages here. -->
-        <p id="api-output" class="status" aria-live="polite"></p>
-      </section>
-
-      <section class="api-section" aria-labelledby="api_title">
-        <p class="eyebrow">Development tool</p>
-        <h2 id="api_title">Test API connection</h2>
-        <p>
-          This button uses the temporary test URL in <code>app.js</code>.
-          Replace it with the correct server endpoint from SwaggerHub later.
-        </p>
-
-        <button id="load_data_button" class="button" type="button">
-          Load sample API data
-        </button>
-      </section>
-    </main>
-
-    <footer>
-      <p>Contact Manager class project</p>
-    </footer>
-
-    <script src="edit_contact.js"></script>
+            <!--Katie: include save/cancel changes buttons-->
+            <div class="button-row">
+              <button id="save_changes_button" type="button">Save changes</button>
+              <button id="cancel_changes_button" class="edit-button" type="button">Cancel</button>
+            </div>
+          </form>
+        </div>
+      </main>
+    <!--Katie: debugging, forgot script source-->
+    <script src="js/code.js"></script>
   </body>
 </html>

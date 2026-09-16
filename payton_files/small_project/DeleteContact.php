@@ -24,7 +24,7 @@ if($contactId === '')
 }
 
 // 2. Database connection string (Update credentials when team finalizes database setup)
-$conn = new mysqli("localhost", "TheBeast", "WeLoveCOP4331", "small_project_test");
+$conn = new mysqli("localhost", "contactapp", "YourChosenPassword1!", "ContactManager");
 
 if($conn->connect_error)
 {

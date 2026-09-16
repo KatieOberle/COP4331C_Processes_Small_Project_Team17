@@ -14,7 +14,7 @@
 	$searchResults = "";
 	$searchCount = 0;
 
-	$conn = new mysqli("localhost", "TheBeast", "WeLoveCOP4331", "small_project_test");
+	$conn = new mysqli("localhost", "contactapp", "YourChosenPassword1!", "ContactManager");
 	if ($conn->connect_error) 
 	{
 		//	returnWithError( $conn->connect_error );

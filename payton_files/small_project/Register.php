@@ -8,7 +8,7 @@
 	// Hash the input password
 	$password = password_hash($inData["password"], PASSWORD_BCRYPT);
 
-	$conn = new mysqli("localhost", "TheBeast", "WeLoveCOP4331", "small_project_test");
+	$conn = new mysqli("localhost", "contactapp", "YourChosenPassword1!", "ContactManager");
 	if ($conn->connect_error) 
 	{
 		returnWithError( $conn->connect_error );

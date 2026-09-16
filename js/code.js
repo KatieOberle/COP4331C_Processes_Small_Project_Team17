@@ -209,6 +209,41 @@ async function addContact()
         document.getElementById("result").innerHTML = "Error, Failed to add contact.";
     }
 }
+
+async function deleteContact(contactId)
+{
+    let contact =
+    {
+        id: contactId
+    };
+
+    try
+    {
+        const response = await fetch("DeleteContact.php",
+        {
+            method: "POST",
+            headers:
+            {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(contact)
+        });
+
+        if (!response.ok)
+        {
+            document.getElementById("contactDelete").innerHTML = "Failed to delete contact, error.";
+            return;
+        }
+
+        document.getElementById("contactDelete").innerHTML = "Contact deleted.";
+        searchContacts();
+    }
+    catch (error){
+        document.getElementById("contactDelete").innerHTML =
+            "Error, failed to delete contact.";
+    }
+}
+
 // Katie: edit contact functionality
 // AI transparency: utilized Codex template and modified accordingly
 const editContactTitle = document.querySelector("#edit_contact_title"); //page title
@@ -277,3 +312,4 @@ if(editContactTitle) //if page is open
         updateTitle(); // restore contact information
     })
 }
+

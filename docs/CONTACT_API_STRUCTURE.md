@@ -31,6 +31,8 @@ Errors return the JSON body below, with the HTTP status code indicating the cate
 | Not logged in | `401` | {"error": "Not authenticated"} |
 | Missing required field | `400` | {"error": "Missing required field"} |
 | Contact not found / not owned by user | `404` | {"error": "Contact not found"} |
+| Password too short (register only) | `400` | {"error": "Password must be at least 8 characters"} |
+| Username already taken (register only) | `409` | {"error": "Username already taken"} |
 | Database failure | `500` | {"error": "Server error"} |
 
 ---
@@ -165,3 +167,88 @@ Errors return the JSON body below, with the HTTP status code indicating the cate
 
 - Matching (name-only by design): Returns `200` upon success. Partial match against `firstName` or `lastName`, case-insensitive, wrapped in `%` wildcards. Results are limited to contacts owned by the logged-in user.
 - Zero results: Returns `200` with `{"results": []}`.
+
+---
+
+## 6. Register
+
+**Path & method:** POST `/LAMPAPI/Register.php`
+
+**Request body:**
+
+```json
+{
+  "firstName": "Sam",
+  "lastName": "Hill",
+  "login": "SamH",
+  "password": "Test"
+}
+```
+
+**Success response (returns status 201):**
+
+```json
+{
+  "id": 3,
+  "firstName": "Sam",
+  "lastName": "Hill",
+  "login": "SamH"
+}
+```
+
+**Notes / validation:** All four fields are required; `{"error": "Missing required field"}` with status `400` if any is missing. `Login` has a `UNIQUE` constraint in the schema, so a duplicate username returns `409` with `{"error": "Username already taken"}`. The password is hashed with `password_hash()` before storage and is never returned in any response.
+
+Passwords must be at least 8 characters. A shorter password returns `400` with `{"error": "Password must be at least 8 characters"}`. There is no maximum length and no character-class requirement.
+
+Registering does **not** log the user in. The client must call Login afterwards to establish a session.
+
+---
+
+## 7. Login
+
+**Path & method:** POST `/LAMPAPI/Login.php`
+
+**Request body:**
+
+```json
+{
+  "login": "SamH",
+  "password": "Test"
+}
+```
+
+**Success response (returns status 200):**
+
+```json
+{
+  "id": 3,
+  "firstName": "Sam",
+  "lastName": "Hill"
+}
+```
+
+**Notes / validation:** On success the server stores the user's ID in `$_SESSION['userId']` and returns the session cookie (`PHPSESSID`). All contact endpoints depend on this session; without it they return `401`.
+
+A failed login returns `401` with `{"error": "Invalid login or password"}`. The same message is returned whether the username does not exist or the password is wrong, so the response does not reveal which usernames are registered.
+
+The password hash is never returned in any response.
+
+---
+
+## 8. Logout
+
+**Path & method:** POST `/LAMPAPI/Logout.php`
+
+**Request body:** none.
+
+**Success response (returns status 200):**
+
+```json
+{
+  "loggedOut": true
+}
+```
+
+**Notes / validation:** Clears the session server-side (`session_unset()` then `session_destroy()`) and expires the `PHPSESSID` cookie. Returns `200` whether or not a session existed, so the client can always treat it as successful.
+
+After logout, every contact endpoint returns `401` until the user logs in again.

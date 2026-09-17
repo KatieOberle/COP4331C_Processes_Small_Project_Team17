@@ -196,8 +196,6 @@ function searchContacts()
 
     /*
         BACKEND/PHP SEARCH CONNECTION GOES HERE
-
-
     */
 
     console.log(
@@ -319,13 +317,135 @@ function addContact()
 
 function editContact(contactId)
 {
+    const form =
+        document.getElementById("editContactForm");
+
+    const idInput =
+        document.getElementById("editContactId");
+
+
+    if (!form || !idInput)
+    {
+        return;
+    }
+
+
+    idInput.value = contactId;
+
+    form.classList.remove("hidden");
+
+
+    /*
+        BACKEND/PHP GET CONTACT DATA GOES HERE
+    */
+
+    console.log(
+        "Edit contact request ready for ID:",
+        contactId
+    );
+}
+
+
+
+function hideEditContactForm()
+{
+    const form =
+        document.getElementById("editContactForm");
+
+
+    if (form)
+    {
+        form.classList.add("hidden");
+    }
+}
+
+
+
+function saveEditedContact()
+{
+    const idInput =
+        document.getElementById("editContactId");
+
+    const firstNameInput =
+        document.getElementById("editFirstName");
+
+    const lastNameInput =
+        document.getElementById("editLastName");
+
+    const phoneInput =
+        document.getElementById("editPhone");
+
+    const emailInput =
+        document.getElementById("editEmail");
+
+    const result =
+        document.getElementById("editContactResult");
+
+
+    if (
+        !idInput ||
+        !firstNameInput ||
+        !lastNameInput ||
+        !phoneInput ||
+        !emailInput ||
+        !result
+    )
+    {
+        return;
+    }
+
+
+    const contactId =
+        idInput.value;
+
+    const firstName =
+        firstNameInput.value.trim();
+
+    const lastName =
+        lastNameInput.value.trim();
+
+    const phone =
+        phoneInput.value.trim();
+
+    const email =
+        emailInput.value.trim();
+
+
+    result.innerHTML = "";
+
+
+    if (
+        contactId === "" ||
+        firstName === "" ||
+        lastName === "" ||
+        phone === "" ||
+        email === ""
+    )
+    {
+        result.innerHTML =
+            "Please fill in all contact fields.";
+
+        return;
+    }
+
+
+    const editedContactData =
+    {
+        id: contactId,
+        firstName: firstName,
+        lastName: lastName,
+        phone: phone,
+        email: email
+    };
+
+
     /*
         BACKEND/PHP EDIT CONTACT CONNECTION GOES HERE
     */
 
     console.log(
-        "Edit contact ID:",
-        contactId
+        "Edit contact request ready:",
+        editedContactData
     );
 }
 
@@ -333,13 +453,95 @@ function editContact(contactId)
 
 function deleteContact(contactId)
 {
+    const form =
+        document.getElementById("deleteContactForm");
+
+    const idInput =
+        document.getElementById("deleteContactId");
+
+    const result =
+        document.getElementById("deleteContactResult");
+
+
+    if (!form || !idInput || !result)
+    {
+        return;
+    }
+
+
+    idInput.value = contactId;
+
+    result.innerHTML = "";
+
+    form.classList.remove("hidden");
+}
+
+
+
+function hideDeleteContactForm()
+{
+    const form =
+        document.getElementById("deleteContactForm");
+
+    const idInput =
+        document.getElementById("deleteContactId");
+
+
+    if (form)
+    {
+        form.classList.add("hidden");
+    }
+
+
+    if (idInput)
+    {
+        idInput.value = "";
+    }
+}
+
+
+
+function confirmDeleteContact()
+{
+    const idInput =
+        document.getElementById("deleteContactId");
+
+    const result =
+        document.getElementById("deleteContactResult");
+
+
+    if (!idInput || !result)
+    {
+        return;
+    }
+
+
+    const contactId =
+        idInput.value;
+
+
+    if (contactId === "")
+    {
+        result.innerHTML =
+            "No contact selected.";
+
+        return;
+    }
+
+
+    const deleteData =
+    {
+        id: contactId
+    };
+
+
     /*
         BACKEND/PHP DELETE CONTACT CONNECTION GOES HERE
     */
 
     console.log(
-        "Delete contact ID:",
-        contactId
+        "Delete contact request ready:",
+        deleteData
     );
 }
 
@@ -348,8 +550,8 @@ function deleteContact(contactId)
 function logout()
 {
     /*
-        BACKEND/PHP LOGOUT 
-    */
+        BACKEND/PHP LOGOUT OR SESSION CLEAR
+\    */
 
     window.location.href = "index.html";
 }

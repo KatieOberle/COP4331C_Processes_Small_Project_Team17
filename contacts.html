@@ -3,6 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
+
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <title>Contact Manager</title>
@@ -10,11 +11,14 @@
     <link rel="stylesheet" href="css/styles.css">
 </head>
 
+
 <body>
 
     <nav class="navbar">
 
-        <h2>Contact Manager</h2>
+        <h2>
+            Contact Manager
+        </h2>
 
         <button onclick="logout()">
             Logout
@@ -28,14 +32,18 @@
         <div class="dashboard-header">
 
             <div>
-                <h1>My Contacts</h1>
+
+                <h1>
+                    My Contacts
+                </h1>
 
                 <p>
                     Search and manage your contacts
                 </p>
+
             </div>
 
-            <button class="add-button">
+            <button class="add-button" onclick="addContact()">
                 + Add Contact
             </button>
 
@@ -58,8 +66,8 @@
 
 
         <!--
-            Contacts will be added here
-            after data from the backend.
+            Real contacts from the backend
+            will be inserted here later.
         -->
         <div
             class="contact-list"
@@ -75,3 +83,4 @@
 </body>
 
 </html>
+

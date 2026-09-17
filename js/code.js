@@ -1,100 +1,81 @@
-
-
 window.addEventListener("load", function()
 {
-    const introScreen =
-        document.getElementById("introScreen");
-
-
-    const mainContent =
-        document.getElementById("mainContent");
-
-
-    /*
-        This code only runs on index.html
-
-    */
+    const introScreen = document.getElementById("introScreen");
+    const mainContent = document.getElementById("mainContent");
 
     if (introScreen && mainContent)
     {
         setTimeout(function()
         {
-            /*
-                Remove the meme screen
-            */
-
             introScreen.style.display = "none";
-
-
-            /*
-                Reveal the login screen
-            */
-
             mainContent.classList.remove("hidden");
-
-
         }, 3000);
     }
 });
 
 
-
-
-
-
 function doLogin()
 {
-    let login =
-        document.getElementById("loginName").value;
+    const loginInput = document.getElementById("loginName");
+    const passwordInput = document.getElementById("loginPassword");
+    const result = document.getElementById("loginResult");
 
-
-    let password =
-        document.getElementById("loginPassword").value;
-
-
-
-    if (login === "" || password === "")
+    if (!loginInput || !passwordInput || !result)
     {
-        document.getElementById("loginResult").innerHTML =
-            "Please enter your username and password.";
-
         return;
     }
 
+    const login = loginInput.value.trim();
+    const password = passwordInput.value;
 
+    result.innerHTML = "";
+
+    if (login === "" || password === "")
+    {
+        result.innerHTML = "Please enter your username and password.";
+        return;
+    }
+
+    const loginData =
+    {
+        login: login,
+        password: password
+    };
 
     /*
-        Temporary frontend test.
+        BACKEND/PHP LOGIN CONNECTION GOES HERE
 
     */
 
-    document.getElementById("loginResult").innerHTML =
-        "Login page works! Backend connection coming soon.";
+    console.log("Login request ready:", loginData);
 }
-
-
-
-
 
 
 function doRegister()
 {
-    let firstName =
-        document.getElementById("firstName").value;
+    const firstNameInput = document.getElementById("firstName");
+    const lastNameInput = document.getElementById("lastName");
+    const loginInput = document.getElementById("registerLogin");
+    const passwordInput = document.getElementById("registerPassword");
+    const result = document.getElementById("registerResult");
 
+    if (
+        !firstNameInput ||
+        !lastNameInput ||
+        !loginInput ||
+        !passwordInput ||
+        !result
+    )
+    {
+        return;
+    }
 
-    let lastName =
-        document.getElementById("lastName").value;
+    const firstName = firstNameInput.value.trim();
+    const lastName = lastNameInput.value.trim();
+    const login = loginInput.value.trim();
+    const password = passwordInput.value;
 
-
-    let login =
-        document.getElementById("registerLogin").value;
-
-
-    let password =
-        document.getElementById("registerPassword").value;
-
-
+    result.innerHTML = "";
 
     if (
         firstName === "" ||
@@ -103,58 +84,95 @@ function doRegister()
         password === ""
     )
     {
-        document.getElementById("registerResult").innerHTML =
-            "Please fill in all fields.";
-
+        result.innerHTML = "Please fill in all fields.";
         return;
     }
 
-
+    const registerData =
+    {
+        firstName: firstName,
+        lastName: lastName,
+        login: login,
+        password: password
+    };
 
     /*
-        Temporary frontend test.
-
+        BACKEND/PHP REGISTER CONNECTION GOES HERE
+\
     */
 
-    document.getElementById("registerResult").innerHTML =
-        "Registration page works! Backend connection coming soon.";
+    console.log("Registration request ready:", registerData);
 }
-
-
-
-
-
 
 
 function searchContacts()
 {
-    const searchBox =
-        document.getElementById("searchText");
+    const searchInput = document.getElementById("searchText");
 
-
-    if (!searchBox)
+    if (!searchInput)
     {
         return;
     }
 
+    const search = searchInput.value.trim();
 
-    let search =
-        searchBox.value;
+    const searchData =
+    {
+        search: search
+    };
 
+    /*
+        BACKEND/PHP SEARCH CONNECTION GOES HERE
 
-    console.log(
-        "Search request: " + search
-    );
+        
+    */
+
+    console.log("Search request ready:", searchData);
 }
 
 
+function addContact()
+{
+    /*
+        BACKEND/PHP ADD CONTACT CONNECTION GOES HERE
+
+    
+    */
+
+    console.log("Add contact ready for backend connection.");
+}
 
 
+function editContact(contactId)
+{
+    /*
+        BACKEND/PHP EDIT CONTACT CONNECTION GOES HERE
 
+        
+    */
+
+    console.log("Edit contact ID:", contactId);
+}
+
+
+function deleteContact(contactId)
+{
+    /*
+        BACKEND/PHP DELETE CONTACT CONNECTION GOES HERE
+
+        
+    */
+
+    console.log("Delete contact ID:", contactId);
+}
 
 
 function logout()
 {
+    /*
+        BACKEND/PHP LOGOUT
+       
+    */
+
     window.location.href = "index.html";
 }
-

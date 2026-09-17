@@ -2,26 +2,19 @@
 <html lang="en">
 
 <head>
-
     <meta charset="UTF-8">
-
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <title>Contact Manager</title>
 
     <link rel="stylesheet" href="css/styles.css">
-
 </head>
-
 
 <body>
 
     <nav class="navbar">
 
-        <h2>
-            Contact Manager 
-        </h2>
-
+        <h2>Contact Manager</h2>
 
         <button onclick="logout()">
             Logout
@@ -32,28 +25,21 @@
 
     <main class="dashboard">
 
-
         <div class="dashboard-header">
 
             <div>
-
-                <h1>
-                    My Contacts
-                </h1>
+                <h1>My Contacts</h1>
 
                 <p>
                     Search and manage your contacts
                 </p>
-
             </div>
-
 
             <button class="add-button">
                 + Add Contact
             </button>
 
         </div>
-
 
 
         <div class="search-container">
@@ -64,7 +50,6 @@
                 placeholder="Search contacts..."
             >
 
-
             <button onclick="searchContacts()">
                 Search
             </button>
@@ -72,81 +57,15 @@
         </div>
 
 
-
-        <div class="contact-list">
-
-
-            <div class="contact-card">
-
-                <div>
-
-                    <h3>
-                        John Smith
-                    </h3>
-
-                    <p>
-                        john@email.com
-                    </p>
-
-                    <p>
-                        (407) 555-1234
-                    </p>
-
-                </div>
-
-
-                <div class="contact-actions">
-
-                    <button class="edit-button">
-                        Edit
-                    </button>
-
-                    <button class="delete-button">
-                        Delete
-                    </button>
-
-                </div>
-
-            </div>
-
-
-
-            <div class="contact-card">
-
-                <div>
-
-                    <h3>
-                        Jane Doe
-                    </h3>
-
-                    <p>
-                        jane@email.com
-                    </p>
-
-                    <p>
-                        (321) 555-5678
-                    </p>
-
-                </div>
-
-
-                <div class="contact-actions">
-
-                    <button class="edit-button">
-                        Edit
-                    </button>
-
-                    <button class="delete-button">
-                        Delete
-                    </button>
-
-                </div>
-
-            </div>
-
-
+        <!--
+            Contacts will be added here
+            after data from the backend.
+        -->
+        <div
+            class="contact-list"
+            id="contactList"
+        >
         </div>
-
 
     </main>
 
@@ -156,4 +75,3 @@
 </body>
 
 </html>
-

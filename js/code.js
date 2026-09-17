@@ -244,6 +244,82 @@ async function deleteContact(contactId)
     }
 }
 
+// Note for html, button/event must both call the same value referenced by id, currently this is searchContacts() 
+// so ""<button onclick="searchContacts()">Search</button>"" mismatch will return null or unexpected behaviors 
+ 
+async function searchContacts()  
+{  
+    // where html and js must match 
+    const searchBox = document.getElementById("searchText");  
+ 
+    // where html and js must match 
+    const result = document.getElementById("searchResult");  
+    //safety handling to prevent unexpected values from running  
+    if (!searchBox || !result) {  
+        return;  
+    }  
+  
+    let search = searchBox.value;  
+    let jsonObject;  
+  
+    try  
+    {  
+          //api connection, fetch()  
+        let response = await fetch("SearchContacts.php",  
+        {  
+            method: "POST",  
+            headers:  
+            {  
+                "Content-Type": "application/json"  
+            },  
+            body: JSON.stringify({search: search})  
+        });  
+  
+        if (!response.ok)  {  
+            result.textContent = "Search failed.";  
+            return;  
+        }  
+  
+        jsonObject = await response.json();  
+    }  
+    catch (error)  
+    {  
+        result.textContent = "Search failed.";  
+        return;  
+    }  
+
+    // error field provided in php files
+    if (jsonObject.error && jsonObject.error != 200)
+    {
+        result.textContent = "Error, search failed.";
+        return;
+    }
+  
+    // wiping previous values   
+    result.innerHTML = "";  
+  
+    // case for when there are no contacts to be found  
+    if (!Array.isArray(jsonObject.results) ||  
+        jsonObject.results.length === 0)  
+    {  
+        result.textContent = "No contacts found.";  
+        return;  
+    }  
+  
+    // output and display the contacts  
+    for (let contact of jsonObject.results)  
+    {  
+        let entry = document.createElement("p");  
+  
+        entry.textContent = contact.firstName + " " + contact.lastName + " - " + contact.email + " - " + contact.phone;  
+        result.appendChild(entry);  
+    }  
+  
+  
+}
+
+
+
 // Katie: edit contact functionality
 // AI transparency: utilized Codex template and modified accordingly
 const editContactTitle = document.querySelector("#edit_contact_title"); //page title

@@ -66,7 +66,6 @@ function doLogin()
 
     /*
         BACKEND/PHP LOGIN CONNECTION GOES HERE
-
     */
 
     console.log(
@@ -148,7 +147,6 @@ function doRegister()
 
     /*
         BACKEND/PHP REGISTER CONNECTION GOES HERE
-
     */
 
     console.log(
@@ -164,8 +162,11 @@ function searchContacts()
     const searchInput =
         document.getElementById("searchText");
 
+    const result =
+        document.getElementById("searchResult");
 
-    if (!searchInput)
+
+    if (!searchInput || !result)
     {
         return;
     }
@@ -173,6 +174,18 @@ function searchContacts()
 
     const search =
         searchInput.value.trim();
+
+
+    result.innerHTML = "";
+
+
+    if (search === "")
+    {
+        result.innerHTML =
+            "Please enter a search term.";
+
+        return;
+    }
 
 
     const searchData =
@@ -293,7 +306,6 @@ function addContact()
 
     /*
         BACKEND/PHP ADD CONTACT CONNECTION GOES HERE
-
     */
 
     console.log(
@@ -308,7 +320,6 @@ function editContact(contactId)
 {
     /*
         BACKEND/PHP EDIT CONTACT CONNECTION GOES HERE
-
     */
 
     console.log(
@@ -323,8 +334,6 @@ function deleteContact(contactId)
 {
     /*
         BACKEND/PHP DELETE CONTACT CONNECTION GOES HERE
-
-
     */
 
     console.log(
@@ -339,9 +348,8 @@ function logout()
 {
     /*
         BACKEND/PHP LOGOUT OR SESSION CLEAR
-       
+
     */
 
     window.location.href = "index.html";
 }
-

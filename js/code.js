@@ -197,6 +197,7 @@ function searchContacts()
     /*
         BACKEND/PHP SEARCH CONNECTION GOES HERE
 
+
     */
 
     console.log(
@@ -347,8 +348,7 @@ function deleteContact(contactId)
 function logout()
 {
     /*
-        BACKEND/PHP LOGOUT OR SESSION CLEAR
-
+        BACKEND/PHP LOGOUT 
     */
 
     window.location.href = "index.html";

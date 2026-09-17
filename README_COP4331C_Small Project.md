@@ -1,45 +1,74 @@
 ## README: COP4331C Small Project - Contact Manager Website
 
------------------------------------------------------------
-This website will follow the requirements listed below.
+# Kenny - Frontend Development Notes
 
-# Requirements
+## Role
 
-* Database Engineers *
-- Use of a remote server (Digital Ocean and LAMP preferred)
-- Development of an API to communicate between the client and server using swagger.io (Swagger Hub)
-- Populating and managing SQL database
-- Create entity relationship diagram (ERD)
-- Unit testing
+Frontend development and frontend integration support for the Personal Contact Manager project.
 
-* Backend Developers *
-- Collaborate with database engineers with established API
-- Ensure each endpoint is represented and testable so frontend developers can check
-- Program all backend calculations and operations used for contact manager features
-- Unit testing
+Primary responsibilities include:
 
-* Frontend Developers *
-- Consult Swagger Hub documentation
-- Produce a usable frontend UI
-- Bootstrap/JQuery recommended for nicer user experience
-- Use of alert boxes strictly for testing and not for final demo (exception: delete confirmation boxes)
-- Unit testing
+- Login page
+- Registration page
+- Contact management interface
+- Search interface
+- Add Contact interface
+- Edit Contact interface
+- Delete Contact interface
+- Logout behavior
+- Frontend validation
+- Preparing the frontend for PHP/backend integration
+- Reviewing frontend behavior for potential bugs
 
 
-* Product Manager *
-- Ensure all project requirements are met
-- Create Use Case and Gantt charts
-- Lead weekly meetings with the team
-- Contribute to the frontend development as well as other demanding areas of the project
-- Schedule the project timeline and deadlines
-- Testing for overall user experience
-- Reach out with team questions to the professor/office hours
+## Current Frontend Status
 
-# Responsibilities of All Members
-- Timely progress for all tasks
-- Citations and appropriate use of AI tools according to the AI Disclosure Template on Webcourses
-- Original student work
-- Working program that collects the user's entered name (first/last), email, phone, and date recorded
-- Search function to search for specific contacts
-- Demonstrate at least one API endpoint with SwaggerHub
-- Professional presentation including all required charts and diagrams
+The frontend has been updated so it no longer relies on hardcoded contact data.
+
+The contact page is prepared to receive real contact information from the backend.
+
+Current frontend features include:
+
+- Login form
+- Registration form
+- Search bar
+- Add Contact form
+- Edit Contact form
+- Delete Contact confirmation
+- Logout button
+- Input validation
+- Dynamic contact list container
+- Session-ready API request structure
+
+
+## Backend Integration Status
+
+The frontend is prepared for backend integration.
+
+PHP/API connections still need to be connected to:
+
+- Login
+- Registration
+- Search Contacts
+- Add Contact
+- Edit Contact
+- Delete Contact
+- Logout and session handling
+
+Frontend placeholders are currently used where PHP/API calls will later be connected.
+
+## Kenny - AI Usage
+
+### ChatGPT by OpenAI
+
+ChatGPT was used as a development support tool during frontend work.
+
+Uses included:
+- Suggesting frontend layout and structure improvements.
+- Reviewing HTML and JavaScript for potential bugs.
+- Suggesting changes to remove hardcoded contact data.
+- Helping prepare login, registration, search, add, edit, delete, and logout functions for backend integration.
+- Assisting with form validation and frontend debugging.
+- Providing GitHub workflow guidance for branches, commits, pull requests, and reviews.
+
+AI suggestions were reviewed, tested, and adjusted before being committed.

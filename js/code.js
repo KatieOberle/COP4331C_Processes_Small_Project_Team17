@@ -212,6 +212,14 @@ async function addContact()
 
 async function deleteContact(contactId)
 {
+    // HTML & javascript must have matching references for id, currently "contactDelete"
+    const result = document.getElementById("contactDelete");
+
+    if (!result)
+    {
+        return;
+    }
+
     let contact =
     {
         id: contactId
@@ -229,20 +237,33 @@ async function deleteContact(contactId)
             body: JSON.stringify(contact)
         });
 
-        if (!response.ok)
+        // Json from the php
+        let jsonObject = await response.json();
+
+        // Ensure there are no php/html errors
+        if (!response.ok || jsonObject.error)
         {
-            document.getElementById("contactDelete").innerHTML = "Failed to delete contact, error.";
+            result.innerHTML = jsonObject.error || "Failed to delete contact, error.";
             return;
         }
 
-        document.getElementById("contactDelete").innerHTML = "Contact deleted.";
+        // an edgecase check if php isnt returning a deleted id
+        if (jsonObject.id != contactId)
+        {
+            result.innerHTML = "Failed to delete contact, error.";
+            return;
+        }
+
+        result.innerHTML = "Contact deleted.";
         searchContacts();
     }
-    catch (error){
-        document.getElementById("contactDelete").innerHTML =
-            "Error, failed to delete contact.";
+    catch (error)
+    {
+        result.innerHTML = "Error, failed to delete contact.";
     }
 }
+
+
 
 // Note for html, button/event must both call the same value referenced by id, currently this is searchContacts() 
 // so ""<button onclick="searchContacts()">Search</button>"" mismatch will return null or unexpected behaviors 

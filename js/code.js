@@ -1,3 +1,36 @@
+/*
+    Backend URL will be added when the PHP
+    endpoints are connected.
+
+*/
+const API_BASE = "BACKEND/PHP";
+
+
+/*
+    Shared helper for PHP API requests.
+
+*/
+async function sendRequest(endpoint, data)
+{
+    const response = await fetch(
+        API_BASE + "/" + endpoint,
+        {
+            method: "POST",
+
+            headers:
+            {
+                "Content-Type": "application/json"
+            },
+
+            credentials: "include",
+
+            body: JSON.stringify(data)
+        }
+    );
+
+    return response;
+}
+
 
 
 window.addEventListener("load", function()
@@ -5,33 +38,16 @@ window.addEventListener("load", function()
     const introScreen =
         document.getElementById("introScreen");
 
-
     const mainContent =
         document.getElementById("mainContent");
-
-
-    /*
-        This code only runs on index.html
-
-    */
 
     if (introScreen && mainContent)
     {
         setTimeout(function()
         {
-            /*
-                Remove the meme screen
-            */
-
             introScreen.style.display = "none";
 
-
-            /*
-                Reveal the login screen
-            */
-
             mainContent.classList.remove("hidden");
-
 
         }, 3000);
     }
@@ -39,61 +55,108 @@ window.addEventListener("load", function()
 
 
 
-
-
-
 function doLogin()
 {
-    let login =
-        document.getElementById("loginName").value;
+    const loginInput =
+        document.getElementById("loginName");
+
+    const passwordInput =
+        document.getElementById("loginPassword");
+
+    const result =
+        document.getElementById("loginResult");
 
 
-    let password =
-        document.getElementById("loginPassword").value;
+    if (!loginInput || !passwordInput || !result)
+    {
+        return;
+    }
 
+
+    const login =
+        loginInput.value.trim();
+
+    const password =
+        passwordInput.value;
+
+
+    result.innerHTML = "";
 
 
     if (login === "" || password === "")
     {
-        document.getElementById("loginResult").innerHTML =
+        result.innerHTML =
             "Please enter your username and password.";
 
         return;
     }
 
 
+    const loginData =
+    {
+        login: login,
+        password: password
+    };
+
 
     /*
-        Temporary frontend test.
+        BACKEND/PHP LOGIN CONNECTION GOES HERE
 
+        Example future call:
+
+        sendRequest("Login.php", loginData);
+
+        Session cookie will be included automatically
+        by sendRequest().
     */
-
-    document.getElementById("loginResult").innerHTML =
-        "Login page works! Backend connection coming soon.";
 }
-
-
-
 
 
 
 function doRegister()
 {
-    let firstName =
-        document.getElementById("firstName").value;
+    const firstNameInput =
+        document.getElementById("firstName");
+
+    const lastNameInput =
+        document.getElementById("lastName");
+
+    const loginInput =
+        document.getElementById("registerLogin");
+
+    const passwordInput =
+        document.getElementById("registerPassword");
+
+    const result =
+        document.getElementById("registerResult");
 
 
-    let lastName =
-        document.getElementById("lastName").value;
+    if (
+        !firstNameInput ||
+        !lastNameInput ||
+        !loginInput ||
+        !passwordInput ||
+        !result
+    )
+    {
+        return;
+    }
 
 
-    let login =
-        document.getElementById("registerLogin").value;
+    const firstName =
+        firstNameInput.value.trim();
+
+    const lastName =
+        lastNameInput.value.trim();
+
+    const login =
+        loginInput.value.trim();
+
+    const password =
+        passwordInput.value;
 
 
-    let password =
-        document.getElementById("registerPassword").value;
-
+    result.innerHTML = "";
 
 
     if (
@@ -103,58 +166,401 @@ function doRegister()
         password === ""
     )
     {
-        document.getElementById("registerResult").innerHTML =
+        result.innerHTML =
             "Please fill in all fields.";
 
         return;
     }
 
 
+    const registerData =
+    {
+        firstName: firstName,
+        lastName: lastName,
+        login: login,
+        password: password
+    };
+
 
     /*
-        Temporary frontend test.
-
+        BACKEND/PHP REGISTER CONNECTION GOES HERE
     */
-
-    document.getElementById("registerResult").innerHTML =
-        "Registration page works! Backend connection coming soon.";
 }
-
-
-
-
 
 
 
 function searchContacts()
 {
-    const searchBox =
+    const searchInput =
         document.getElementById("searchText");
 
+    const result =
+        document.getElementById("searchResult");
 
-    if (!searchBox)
+
+    if (!searchInput || !result)
     {
         return;
     }
 
 
-    let search =
-        searchBox.value;
+    const search =
+        searchInput.value.trim();
 
 
-    console.log(
-        "Search request: " + search
-    );
+    result.innerHTML = "";
+
+
+    if (search === "")
+    {
+        result.innerHTML =
+            "Please enter a search term.";
+
+        return;
+    }
+
+
+    const searchData =
+    {
+        search: search
+    };
+
+
+    /*
+        BACKEND/PHP SEARCH CONNECTION GOES HERE
+
+    */
 }
 
 
 
+function showAddContactForm()
+{
+    const form =
+        document.getElementById("addContactForm");
 
+
+    if (form)
+    {
+        form.classList.remove("hidden");
+    }
+}
+
+
+
+function hideAddContactForm()
+{
+    const form =
+        document.getElementById("addContactForm");
+
+
+    if (form)
+    {
+        form.classList.add("hidden");
+    }
+}
+
+
+
+function addContact()
+{
+    const firstNameInput =
+        document.getElementById("contactFirstName");
+
+    const lastNameInput =
+        document.getElementById("contactLastName");
+
+    const phoneInput =
+        document.getElementById("contactPhone");
+
+    const emailInput =
+        document.getElementById("contactEmail");
+
+    const result =
+        document.getElementById("addContactResult");
+
+
+    if (
+        !firstNameInput ||
+        !lastNameInput ||
+        !phoneInput ||
+        !emailInput ||
+        !result
+    )
+    {
+        return;
+    }
+
+
+    const firstName =
+        firstNameInput.value.trim();
+
+    const lastName =
+        lastNameInput.value.trim();
+
+    const phone =
+        phoneInput.value.trim();
+
+    const email =
+        emailInput.value.trim();
+
+
+    result.innerHTML = "";
+
+
+    if (
+        firstName === "" ||
+        lastName === "" ||
+        phone === "" ||
+        email === ""
+    )
+    {
+        result.innerHTML =
+            "Please fill in all contact fields.";
+
+        return;
+    }
+
+
+    const contactData =
+    {
+        firstName: firstName,
+        lastName: lastName,
+        phone: phone,
+        email: email
+    };
+
+
+    /*
+        BACKEND/PHP ADD CONTACT CONNECTION GOES HERE
+    */
+}
+
+
+
+function editContact(contactId)
+{
+    const form =
+        document.getElementById("editContactForm");
+
+    const idInput =
+        document.getElementById("editContactId");
+
+
+    if (!form || !idInput)
+    {
+        return;
+    }
+
+
+    idInput.value = contactId;
+
+    form.classList.remove("hidden");
+
+
+    /*
+        BACKEND/PHP GET CONTACT DATA GOES HERE
+    */
+}
+
+
+
+function hideEditContactForm()
+{
+    const form =
+        document.getElementById("editContactForm");
+
+
+    if (form)
+    {
+        form.classList.add("hidden");
+    }
+}
+
+
+
+function saveEditedContact()
+{
+    const idInput =
+        document.getElementById("editContactId");
+
+    const firstNameInput =
+        document.getElementById("editFirstName");
+
+    const lastNameInput =
+        document.getElementById("editLastName");
+
+    const phoneInput =
+        document.getElementById("editPhone");
+
+    const emailInput =
+        document.getElementById("editEmail");
+
+    const result =
+        document.getElementById("editContactResult");
+
+
+    if (
+        !idInput ||
+        !firstNameInput ||
+        !lastNameInput ||
+        !phoneInput ||
+        !emailInput ||
+        !result
+    )
+    {
+        return;
+    }
+
+
+    const contactId =
+        idInput.value;
+
+    const firstName =
+        firstNameInput.value.trim();
+
+    const lastName =
+        lastNameInput.value.trim();
+
+    const phone =
+        phoneInput.value.trim();
+
+    const email =
+        emailInput.value.trim();
+
+
+    result.innerHTML = "";
+
+
+    if (
+        contactId === "" ||
+        firstName === "" ||
+        lastName === "" ||
+        phone === "" ||
+        email === ""
+    )
+    {
+        result.innerHTML =
+            "Please fill in all contact fields.";
+
+        return;
+    }
+
+
+    const editedContactData =
+    {
+        id: contactId,
+        firstName: firstName,
+        lastName: lastName,
+        phone: phone,
+        email: email
+    };
+
+
+    /*
+        BACKEND/PHP EDIT CONTACT CONNECTION GOES HERE
+    */
+}
+
+
+
+function deleteContact(contactId)
+{
+    const form =
+        document.getElementById("deleteContactForm");
+
+    const idInput =
+        document.getElementById("deleteContactId");
+
+    const result =
+        document.getElementById("deleteContactResult");
+
+
+    if (!form || !idInput || !result)
+    {
+        return;
+    }
+
+
+    idInput.value = contactId;
+
+    result.innerHTML = "";
+
+    form.classList.remove("hidden");
+}
+
+
+
+function hideDeleteContactForm()
+{
+    const form =
+        document.getElementById("deleteContactForm");
+
+    const idInput =
+        document.getElementById("deleteContactId");
+
+
+    if (form)
+    {
+        form.classList.add("hidden");
+    }
+
+
+    if (idInput)
+    {
+        idInput.value = "";
+    }
+}
+
+
+
+function confirmDeleteContact()
+{
+    const idInput =
+        document.getElementById("deleteContactId");
+
+    const result =
+        document.getElementById("deleteContactResult");
+
+
+    if (!idInput || !result)
+    {
+        return;
+    }
+
+
+    const contactId =
+        idInput.value;
+
+
+    if (contactId === "")
+    {
+        result.innerHTML =
+            "No contact selected.";
+
+        return;
+    }
+
+
+    const deleteData =
+    {
+        id: contactId
+    };
+
+
+    /*
+        BACKEND/PHP DELETE CONTACT CONNECTION GOES HERE
+    */
+}
 
 
 
 function logout()
 {
+    /*
+        BACKEND/PHP LOGOUT ENDPOINT GOES HERE.
+
+    */
+
     window.location.href = "index.html";
 }
-

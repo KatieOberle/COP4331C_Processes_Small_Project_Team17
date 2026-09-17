@@ -1,3 +1,38 @@
+/*
+    Backend URL will be added when the PHP
+    endpoints are connected.
+
+*/
+const API_BASE = "BACKEND/PHP";
+
+
+/*
+    Shared helper for PHP API requests.
+
+*/
+async function sendRequest(endpoint, data)
+{
+    const response = await fetch(
+        API_BASE + "/" + endpoint,
+        {
+            method: "POST",
+
+            headers:
+            {
+                "Content-Type": "application/json"
+            },
+
+            credentials: "include",
+
+            body: JSON.stringify(data)
+        }
+    );
+
+    return response;
+}
+
+
+
 window.addEventListener("load", function()
 {
     const introScreen =
@@ -66,12 +101,14 @@ function doLogin()
 
     /*
         BACKEND/PHP LOGIN CONNECTION GOES HERE
-    */
 
-    console.log(
-        "Login request ready:",
-        loginData
-    );
+        Example future call:
+
+        sendRequest("Login.php", loginData);
+
+        Session cookie will be included automatically
+        by sendRequest().
+    */
 }
 
 
@@ -148,11 +185,6 @@ function doRegister()
     /*
         BACKEND/PHP REGISTER CONNECTION GOES HERE
     */
-
-    console.log(
-        "Registration request ready:",
-        registerData
-    );
 }
 
 
@@ -196,12 +228,8 @@ function searchContacts()
 
     /*
         BACKEND/PHP SEARCH CONNECTION GOES HERE
-    */
 
-    console.log(
-        "Search request ready:",
-        searchData
-    );
+    */
 }
 
 
@@ -306,11 +334,6 @@ function addContact()
     /*
         BACKEND/PHP ADD CONTACT CONNECTION GOES HERE
     */
-
-    console.log(
-        "Add contact request ready:",
-        contactData
-    );
 }
 
 
@@ -338,11 +361,6 @@ function editContact(contactId)
     /*
         BACKEND/PHP GET CONTACT DATA GOES HERE
     */
-
-    console.log(
-        "Edit contact request ready for ID:",
-        contactId
-    );
 }
 
 
@@ -442,11 +460,6 @@ function saveEditedContact()
     /*
         BACKEND/PHP EDIT CONTACT CONNECTION GOES HERE
     */
-
-    console.log(
-        "Edit contact request ready:",
-        editedContactData
-    );
 }
 
 
@@ -538,11 +551,6 @@ function confirmDeleteContact()
     /*
         BACKEND/PHP DELETE CONTACT CONNECTION GOES HERE
     */
-
-    console.log(
-        "Delete contact request ready:",
-        deleteData
-    );
 }
 
 
@@ -550,8 +558,9 @@ function confirmDeleteContact()
 function logout()
 {
     /*
-        BACKEND/PHP LOGOUT OR SESSION CLEAR
-\    */
+        BACKEND/PHP LOGOUT ENDPOINT GOES HERE.
+
+    */
 
     window.location.href = "index.html";
 }

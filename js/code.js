@@ -120,94 +120,67 @@ function doRegister()
         "Registration page works! Backend connection coming soon.";
 }
 
-
-
-
-
-
-
-function searchContacts()
-{
-    const searchBox =
-        document.getElementById("searchText");
-
-
-    if (!searchBox)
-    {
-        return;
-    }
-
-
-    let search =
-        searchBox.value;
-
-
-    console.log(
-        "Search request: " + search
-    );
-}
-
-
-
-
-
-
-
 function logout()
 {
     window.location.href = "index.html";
 }
 
-async function addContact()
-{
-  //pull needeed contact data name,email,phone
-    let firstName = document.getElementById("firstName").value.trim();
-    let lastName = document.getElementById("lastName").value.trim();
-    let email =  document.getElementById("email").value.trim();
-    let phoneNumber =  document.getElementById("phoneNumber").value.trim();
+// for html button/event should call addContact()
+// ex. <button onclick="addContact()">Add Contact</button>
 
+async function addContact() 
+{ 
+    // html and js must have matching id="references", cannot have mismatches for fname/last/email/phone
+    //pull needeed contact data name,email,phone 
+    let firstName = document.getElementById("firstName").value.trim(); 
+    let lastName = document.getElementById("lastName").value.trim(); 
+    let email = document.getElementById("email").value.trim(); 
+    let phoneNumber = document.getElementById("phoneNumber").value.trim(); 
 
-    // Copied strict equality from php 
-   // asks for fname+lname and either email/pass
-    if (  firstName === "" ||    lastName === "" ||
-        (email === "" && phoneNumber === "")
-    )
-    {
-        document.getElementById("result").innerHTML = "Enter a first and last name, and either their email or phone number.";
-        return;
-    }
-  
-    try
-    {
-      // send json contact to addcontact.php endpoint
-        const response = await fetch("AddContact.php",
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            firstName: firstName,
-            lastName: lastName,
-            email: email,
-            phoneNumber: phoneNumber
-          });
-      
-        const data = await response.json();
-      //Will check and send specific http server side errors like 500 internal error ect
-        if (!response.ok)
-        {
-            document.getElementById("result").innerHTML = data.error || "Unable to add contact, error.";
-            return;
-        }
+ 
+    // Copied strict equality from php  
+    // asks for fname+lname and either email/pass 
+    if (firstName === "" || lastName === "" || 
+        (email === "" && phoneNumber === "") 
+    ) 
+    { 
+        document.getElementById("result").innerHTML = "Enter a first and last name, and either their email or phone number."; 
+        return; 
+    } 
+   
+    try 
+    { 
+        // send json contact to addcontact.php endpoint 
+        const response = await fetch("AddContact.php", 
+        { 
+            method: "POST", 
+            headers: { "Content-Type": "application/json" }, 
+            body: JSON.stringify({ 
+                firstName: firstName, 
+                lastName: lastName, 
+                email: email, 
+                phone: phoneNumber 
+            })
+        }); 
+ 
 
+        const data = await response.json(); 
+        // Ensure there are no php/html errors
+        if (!response.ok || data.error) 
+        { 
+            document.getElementById("result").innerHTML = data.error || "Unable to add contact, error."; 
+            return; 
+        } 
 
-        document.getElementById("result").innerHTML = "Contact added successfully.";
-        console.log("New contact:", data);
-    }
-      //fallback error code
-    catch (error)
-    {
-        document.getElementById("result").innerHTML = "Error, Failed to add contact.";
-    }
+        document.getElementById("result").innerHTML = "Contact added successfully."; 
+        console.log("New contact:", data); 
+    } 
+
+    //fallback error code 
+    catch (error) 
+    { 
+        document.getElementById("result").innerHTML = "Error, Failed to add contact."; 
+    } 
 }
 
 async function deleteContact(contactId)

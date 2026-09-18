@@ -186,52 +186,202 @@ function doRegister()
         BACKEND/PHP REGISTER CONNECTION GOES HERE
     */
 }
+async function addContact() 
+{ 
+    // html and js must have matching id="references", cannot have mismatches for fname/last/email/phone
+    //pull needeed contact data name,email,phone 
+    let firstName = document.getElementById("firstName").value.trim(); 
+    let lastName = document.getElementById("lastName").value.trim(); 
+    let email = document.getElementById("email").value.trim(); 
+    let phoneNumber = document.getElementById("phoneNumber").value.trim(); 
 
+ 
+    // Copied strict equality from php  
+    // asks for fname+lname and either email/pass 
+    if (firstName === "" || lastName === "" || 
+        (email === "" && phoneNumber === "") 
+    ) 
+    { 
+        document.getElementById("result").innerHTML = "Enter a first and last name, and either their email or phone number."; 
+        return; 
+    } 
+   
+    try 
+    { 
+        // send json contact to addcontact.php endpoint 
+        const response = await fetch("AddContact.php", 
+        { 
+            method: "POST", 
+            headers: { "Content-Type": "application/json" }, 
+            body: JSON.stringify({ 
+                firstName: firstName, 
+                lastName: lastName, 
+                email: email, 
+                phone: phoneNumber 
+            })
+        }); 
+ 
 
+        const data = await response.json(); 
+        // Ensure there are no php/html errors
+        if (!response.ok || data.error) 
+        { 
+            document.getElementById("result").innerHTML = data.error || "Unable to add contact, error."; 
+            return; 
+        } 
 
-function searchContacts()
+        document.getElementById("result").innerHTML = "Contact added successfully."; 
+        console.log("New contact:", data); 
+    } 
+
+    //fallback error code 
+    catch (error) 
+    { 
+        document.getElementById("result").innerHTML = "Error, Failed to add contact."; 
+    } 
+}
+
+async function deleteContact(contactId)
 {
-    const searchInput =
-        document.getElementById("searchText");
+    // HTML & javascript must have matching references for id, currently "contactDelete"
+    const result = document.getElementById("contactDelete");
 
-    const result =
-        document.getElementById("searchResult");
-
-
-    if (!searchInput || !result)
+    if (!result)
     {
         return;
     }
 
+    let contact =
+    {
+        id: contactId
+    };
 
-    const search =
-        searchInput.value.trim();
+    try
+    {
+        const response = await fetch("DeleteContact.php",
+        {
+            method: "POST",
+            headers:
+            {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(contact)
+        });
+
+        // Json from the php
+        let jsonObject = await response.json();
+
+        // Ensure there are no php/html errors
+        if (!response.ok || jsonObject.error)
+        {
+            result.innerHTML = jsonObject.error || "Failed to delete contact, error.";
+            return;
+        }
+
+        // an edgecase check if php isnt returning a deleted id
+        if (jsonObject.id != contactId)
+        {
+            result.innerHTML = "Failed to delete contact, error.";
+            return;
+        }
+
+        result.innerHTML = "Contact deleted.";
+        searchContacts();
+    }
+    catch (error)
+    {
+        result.innerHTML = "Error, failed to delete contact.";
+    }
+}
 
 
+
+async function searchContacts()  
+{  
+    // where html and js must match 
+    const searchBox = document.getElementById("searchText");  
+ 
+    // where html and js must match 
+    const result = document.getElementById("searchResult");  
+
+    //safety handling to prevent unexpected values from running  
+    if (!searchBox || !result) 
+    {  
+        return;  
+    }  
+  
+    let search = searchBox.value.trim();  
+    let jsonObject;  
+
+    // wiping previous values
     result.innerHTML = "";
 
-
+    // stops an empty search from going through
     if (search === "")
     {
-        result.innerHTML =
-            "Please enter a search term.";
-
+        result.innerHTML = "Please enter a search term.";
         return;
     }
-
 
     const searchData =
     {
         search: search
     };
+  
+    try  
+    {  
+        //api connection, fetch()  
+        let response = await fetch("SearchContacts.php",  
+        {  
+            method: "POST",  
+            headers:  
+            {  
+                "Content-Type": "application/json"  
+            },  
+            body: JSON.stringify(searchData)  
+        });  
+  
+        if (!response.ok)  
+        {  
+            result.textContent = "Search failed.";  
+            return;  
+        }  
+  
+        jsonObject = await response.json();  
+    }  
+    catch (error)  
+    {  
+        result.textContent = "Search failed.";  
+        return;  
+    }  
 
-
-    /*
-        BACKEND/PHP SEARCH CONNECTION GOES HERE
-
-    */
+    // error field provided in php files
+    if (jsonObject.error && jsonObject.error != 200)
+    {
+        result.textContent = "Error, search failed.";
+        return;
+    }
+  
+    // wiping previous values   
+    result.innerHTML = "";  
+  
+    // case for when there are no contacts to be found  
+    if (!Array.isArray(jsonObject.results) ||  
+        jsonObject.results.length === 0)  
+    {  
+        result.textContent = "No contacts found.";  
+        return;  
+    }  
+  
+    // output and display the contacts  
+    for (let contact of jsonObject.results)  
+    {  
+        let entry = document.createElement("p");  
+  
+        entry.textContent = contact.firstName + " " + contact.lastName + " - " + contact.email + " - " + contact.phone;  
+        result.appendChild(entry);  
+    }  
 }
-
 
 
 function showAddContactForm()
@@ -259,83 +409,6 @@ function hideAddContactForm()
         form.classList.add("hidden");
     }
 }
-
-
-
-function addContact()
-{
-    const firstNameInput =
-        document.getElementById("contactFirstName");
-
-    const lastNameInput =
-        document.getElementById("contactLastName");
-
-    const phoneInput =
-        document.getElementById("contactPhone");
-
-    const emailInput =
-        document.getElementById("contactEmail");
-
-    const result =
-        document.getElementById("addContactResult");
-
-
-    if (
-        !firstNameInput ||
-        !lastNameInput ||
-        !phoneInput ||
-        !emailInput ||
-        !result
-    )
-    {
-        return;
-    }
-
-
-    const firstName =
-        firstNameInput.value.trim();
-
-    const lastName =
-        lastNameInput.value.trim();
-
-    const phone =
-        phoneInput.value.trim();
-
-    const email =
-        emailInput.value.trim();
-
-
-    result.innerHTML = "";
-
-
-    if (
-        firstName === "" ||
-        lastName === "" ||
-        phone === "" ||
-        email === ""
-    )
-    {
-        result.innerHTML =
-            "Please fill in all contact fields.";
-
-        return;
-    }
-
-
-    const contactData =
-    {
-        firstName: firstName,
-        lastName: lastName,
-        phone: phone,
-        email: email
-    };
-
-
-    /*
-        BACKEND/PHP ADD CONTACT CONNECTION GOES HERE
-    */
-}
-
 
 
 function editContact(contactId)

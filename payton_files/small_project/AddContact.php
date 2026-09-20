@@ -26,9 +26,9 @@ if($firstName === '' || $lastName === '' || ($email === '' && $phone === ''))
     exit();
 }
 
-// 2. Database connection string (Update credentials when team finalizes database setup)
-$conn = new mysqli("localhost", "contactapp", "YourChosenPassword1!", "ContactManager");
+$cfg = require __DIR__ . '/config.php';
 
+$conn = new mysqli($cfg['host'], $cfg['user'], $cfg['pass'], $cfg['name']); 	
 if($conn->connect_error)
 {
     http_response_code(500);

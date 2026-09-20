@@ -14,7 +14,9 @@
 	$searchResults = "";
 	$searchCount = 0;
 
-	$conn = new mysqli("localhost", "contactapp", "YourChosenPassword1!", "ContactManager");
+	$cfg = require __DIR__ . '/config.php';
+
+	$conn = new mysqli($cfg['host'], $cfg['user'], $cfg['pass'], $cfg['name']); 	
 	if ($conn->connect_error) 
 	{
 		//	returnWithError( $conn->connect_error );

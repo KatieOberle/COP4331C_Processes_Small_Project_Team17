@@ -5,16 +5,12 @@
 */
 const API_BASE = "BACKEND/PHP";
 
-
-/*
-    Shared helper for PHP API requests.
-
-*/
 async function sendRequest(endpoint, data)
 {
     const response = await fetch(
         API_BASE + "/" + endpoint,
         {
+            // JSON request
             method: "POST",
 
             headers:
@@ -28,7 +24,14 @@ async function sendRequest(endpoint, data)
         }
     );
 
-    return response;
+    // Katie: 9/21 Codex suggested addition, use session cookies and indicate API errors consistently
+    const payload = await response.json();
+
+    if(!response.ok || payload.error) // issue with response or payload when loading page
+    {
+        throw new Error(payload.error || "Request failed."); // indicate error
+    }
+    return payload; // return response
 }
 
 

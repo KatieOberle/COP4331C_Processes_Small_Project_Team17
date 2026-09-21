@@ -8,7 +8,7 @@
 
 | Item | Decision |
 | --- | --- |
-| Base path | `/LAMPAPI/` |
+| Base path | `/api/` |
 | Content type | `application/json` |
 | JSON field casing | **camelCase** — `firstName`, `lastName`, `email`. |
 | How the server identifies the user | **PHP sessions** — `session_start()`, then read `$_SESSION['userId']` |
@@ -39,7 +39,7 @@ Errors return the JSON body below, with the HTTP status code indicating the cate
 
 ## 2. Add contact
 
-**Path & method:** POST `/LAMPAPI/AddContact.php`
+**Path & method:** POST `/api/AddContact.php`
 
 **Request body:**
 
@@ -71,7 +71,7 @@ Errors return the JSON body below, with the HTTP status code indicating the cate
 
 ## 3. Edit contact
 
-**Path & method:** PUT `/LAMPAPI/EditContact.php`
+**Path & method:** PUT `/api/EditContact.php`
 
 **Request body:**
 
@@ -104,7 +104,7 @@ Errors return the JSON body below, with the HTTP status code indicating the cate
 
 ## 4. Delete contact
 
-**Path & method:** DELETE `/LAMPAPI/DeleteContact.php`
+**Path & method:** DELETE `/api/DeleteContact.php`
 
 **Request body:**
 
@@ -128,7 +128,7 @@ Errors return the JSON body below, with the HTTP status code indicating the cate
 
 ## 5. Search contacts
 
-**Path & method:** POST `/LAMPAPI/SearchContacts.php`
+**Path & method:** POST `/api/SearchContacts.php`
 
 **Request body:**
 
@@ -172,7 +172,7 @@ Errors return the JSON body below, with the HTTP status code indicating the cate
 
 ## 6. Register
 
-**Path & method:** POST `/LAMPAPI/Register.php`
+**Path & method:** POST `/api/Register.php`
 
 **Request body:**
 
@@ -206,7 +206,7 @@ Registering does **not** log the user in. The client must call Login afterwards 
 
 ## 7. Login
 
-**Path & method:** POST `/LAMPAPI/Login.php`
+**Path & method:** POST `/api/Login.php`
 
 **Request body:**
 
@@ -237,7 +237,7 @@ The password hash is never returned in any response.
 
 ## 8. Logout
 
-**Path & method:** POST `/LAMPAPI/Logout.php`
+**Path & method:** POST `/api/Logout.php`
 
 **Request body:** none.
 

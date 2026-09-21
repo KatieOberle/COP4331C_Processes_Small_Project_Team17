@@ -451,9 +451,9 @@ function hideEditContactForm()
 }
 
 
-
-function saveEditedContact()
+async function saveEditedContact()
 {
+    //Grab contacts account information
     const idInput =
         document.getElementById("editContactId");
 
@@ -488,7 +488,7 @@ function saveEditedContact()
 
     const contactId =
         idInput.value;
-
+     //remove whitespace 
     const firstName =
         firstNameInput.value.trim();
 
@@ -504,7 +504,7 @@ function saveEditedContact()
 
     result.innerHTML = "";
 
-
+     //make sure the contact-information isnt empty.
     if (
         contactId === "" ||
         firstName === "" ||
@@ -530,11 +530,46 @@ function saveEditedContact()
     };
 
 
-    /*
-        BACKEND/PHP EDIT CONTACT CONNECTION GOES HERE
-    */
-}
+    try
+    {
+        // Send edited contact to PHP
+        const response = await fetch("EditContact.php",
+        {
+            method: "POST",
+            headers:
+            {
+                "Content-Type": "application/json"
+            },
+            credentials: "same-origin",
+            body: JSON.stringify(editedContactData)
+        });
 
+
+        // Check if the request failed
+        if (!response.ok)
+        {
+            result.innerHTML = "Failed to update the contact.";
+            return;
+        }
+        const data = await response.json();
+
+
+        // PHP error check, html display 
+        if (data.error)
+        {
+            result.innerHTML = data.error;
+            return;
+        }
+
+
+        // display result for HTML
+        result.innerHTML = "Contact updated";
+    }
+    catch (error)
+    {
+        result.innerHTML = "Server connection error.";
+    }
+}
 
 
 function deleteContact(contactId)

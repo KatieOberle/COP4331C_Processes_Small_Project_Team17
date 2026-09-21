@@ -190,10 +190,14 @@ async function addContact()
 { 
     // html and js must have matching id="references", cannot have mismatches for fname/last/email/phone
     //pull needeed contact data name,email,phone 
-    let firstName = document.getElementById("firstName").value.trim(); 
-    let lastName = document.getElementById("lastName").value.trim(); 
-    let email = document.getElementById("email").value.trim(); 
-    let phoneNumber = document.getElementById("phoneNumber").value.trim(); 
+
+    // Katie: adjustments ensure matching between javascript and html files
+
+    // Katie: adjusted contact info ID's for name, email, and phone to match contacts.html, advised by Claude Sonnet v5
+    let firstName = document.getElementById("contactFirstName").value.trim(); 
+    let lastName = document.getElementById("contactLastName").value.trim(); 
+    let email = document.getElementById("contactEmail").value.trim(); 
+    let phoneNumber = document.getElementById("contactPhone").value.trim(); 
 
  
     // Copied strict equality from php  
@@ -202,7 +206,8 @@ async function addContact()
         (email === "" && phoneNumber === "") 
     ) 
     { 
-        document.getElementById("result").innerHTML = "Enter a first and last name, and either their email or phone number."; 
+        // Katie: adjusted result ID to match contacts.html, advised by Claude Sonnet v5
+        document.getElementById("addContactResult").innerHTML = "Enter a first and last name, and either their email or phone number."; 
         return; 
     } 
    

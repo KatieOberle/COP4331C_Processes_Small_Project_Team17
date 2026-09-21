@@ -34,6 +34,15 @@ async function sendRequest(endpoint, data)
     return payload; // return response
 }
 
+// Katie: 9/21, setResult function to safely show API status messages
+function setResult(id, message) // customize id desired and message
+{
+    const result = document.getElementById(id); // fetch element
+    if (result) // if element exists
+    {
+        result.textContent = message; // include message
+    }
+}
 
 
 window.addEventListener("load", function()

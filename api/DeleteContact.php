@@ -1,5 +1,12 @@
 <?php
 // 1. Session authentication check
+session_set_cookie_params([
+ 'lifetime' => 0,
+ 'path' => '/',
+ 'secure' => true, // once served over HTTPS
+ 'httponly' => true,
+ 'samesite' => 'Lax',
+]);
 session_start();
 if(!isset($_SESSION['userId']))
 {
@@ -56,55 +63,13 @@ if(!$stmt->execute())
     $conn->close();
     exit();
 }
-
-// Reset AUTO_INCREMENT to lowest number
-$stmt = $conn->prepare("SELECT MAX(ID) FROM Contacts");
-
-if(!$stmt)
+if ($stmt->affected_rows === 0)
 {
-    http_response_code(500);
-    error_log($conn->error);
-    sendJson(["error" => "Server error"]);
-    $conn->close();
-    exit();
-}
-
-if(!$stmt->execute())
-{
-    http_response_code(500);
-        error_log($stmt->error);
-    sendJson(["error" => "Server error"]);
-    $stmt->close();
-    $conn->close();
-    exit();
-}
-
-$result = $stmt->get_result();
-
-if( $row = $result->fetch_assoc()  )
-{
-	$nextId = $row['ID'] + 1;
-	$stmt = $conn->prepare("ALTER TABLE Contacts AUTO_INCREMENT=$nextId");
-
-if(!$stmt)
-{
-    http_response_code(500);
-    error_log($conn->error);
-    sendJson(["error" => "Server error"]);
-    $conn->close();
-    exit();
-}
-
-if(!$stmt->execute())
-{
-    http_response_code(500);
-        error_log($stmt->error);
-    sendJson(["error" => "Server error"]);
-    $stmt->close();
-    $conn->close();
-    exit();
-}
-
+	http_response_code(404);
+	$stmt->close();
+	$conn->close();
+	sendJson(["error" => "Contact not found"]);
+	exit();
 }
 
 $conn->close();

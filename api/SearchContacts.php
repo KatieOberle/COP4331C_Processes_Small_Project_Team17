@@ -1,5 +1,11 @@
 <?php
-
+session_set_cookie_params([
+ 'lifetime' => 0,
+ 'path' => '/',
+ 'secure' => true, // once served over HTTPS
+ 'httponly' => true,
+ 'samesite' => 'Lax',
+]);
 	session_start();
 	
 	if (!isset($_SESSION['userId']))
@@ -25,21 +31,37 @@
 	else
 	{
 		$stmt = $conn->prepare("select * from Contacts where (FirstName like ? OR LastName like?) and UserID=?");
-		$contactName = "%" . $inData["search"] . "%";
+		$search = trim($inData["search"] ?? '');
+		if ($search === '')
+		{
+			http_response_code(400);
+			echo json_encode(["results" => [], "error" => "Missing search term"]);
+			exit;
+		}
+		$contactName = "%" . $search . "%";
 		$stmt->bind_param("ssi", $contactName, $contactName, $_SESSION['userId']);
-		$stmt->execute();
-		
-		$result = $stmt->get_result();
+		if (!$stmt->execute())
+		{
+			http_response_code(500);
+			echo json_encode(["results" => [], "error" => "Server error"]);
+			exit;
+		}
+		$result = [];
 		
 		while($row = $result->fetch_assoc())
 		{
-			if( $searchCount > 0 )
-			{
-				$searchResults .= ",";
-			}
-			$searchCount++;
-			$searchResults .= '{"id" : "' . $row["ID"] .  '", "firstName" : "' . $row["FirstName"] . '", "lastName" : "' . $row["LastName"] . '", "email" : "' . $row["Email"] . '", "phone" : "' . $row["Phone"] . '", "dateCreated" : "' . $row["DateCreated"] . '"}';
+			$results[] = [
+				"id" => $row["ID"],
+				"firstName" => $row["FirstName"],
+				"lastName" => $row["LastName"],
+				"email" => $row["Email"],
+				"phone" => $row["Phone"],
+				"dateCreated" => $row["DateCreated"],
+			];
 		}
+
+		header('Content-Type: application/json');
+		echo json_ecode(["results" => $results, "error" => ""]);
 		
 		if( $searchCount == 0 )
 		{

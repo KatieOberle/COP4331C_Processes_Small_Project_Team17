@@ -54,9 +54,9 @@ window.addEventListener("load", function()
 });
 
 
-
-function doLogin()
+async function doLogin()
 {
+    // grab login, user/password
     const loginInput =
         document.getElementById("loginName");
 
@@ -67,6 +67,7 @@ function doLogin()
         document.getElementById("loginResult");
 
 
+    // verify html elements
     if (!loginInput || !passwordInput || !result)
     {
         return;
@@ -83,6 +84,7 @@ function doLogin()
     result.innerHTML = "";
 
 
+    // verify login and password 
     if (login === "" || password === "")
     {
         result.innerHTML =
@@ -92,6 +94,7 @@ function doLogin()
     }
 
 
+    // Prepare login (pass/user) for the PHP backend
     const loginData =
     {
         login: login,
@@ -99,18 +102,49 @@ function doLogin()
     };
 
 
-    /*
-        BACKEND/PHP LOGIN CONNECTION GOES HERE
+    try
+    {
+        // Send login info to phpbackend, -> Login.php
+        const response = await fetch("Login.php",
+        {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
 
-        Example future call:
+            credentials: "same-origin",
+            body: JSON.stringify(loginData)
+        });
 
-        sendRequest("Login.php", loginData);
 
-        Session cookie will be included automatically
-        by sendRequest().
-    */
+        // verify http
+        if (!response.ok)
+        {
+            result.innerHTML = "Login request has failed.";
+            return;
+        }
+
+
+        // json connection from php
+        const data = await response.json();
+
+
+        // this just outputs errors as a HTML result we can display
+        if (data.error !== "")
+        {
+            result.innerHTML = data.error;
+            return;
+        }
+
+
+        // redirect to contacts page after succesful login
+        window.location.href = "contacts.html";
+    }
+    catch (error)
+    {
+        result.innerHTML = "Server error, login failed.";
+    }
 }
-
 
 
 function doRegister()

@@ -146,9 +146,9 @@ async function doLogin()
     }
 }
 
-
-function doRegister()
+async function doRegister()
 {
+    // grab all login fields
     const firstNameInput =
         document.getElementById("firstName");
 
@@ -193,6 +193,7 @@ function doRegister()
     result.innerHTML = "";
 
 
+    // Verify infomation is filled out
     if (
         firstName === "" ||
         lastName === "" ||
@@ -207,6 +208,7 @@ function doRegister()
     }
 
 
+    // Prepare for PHP
     const registerData =
     {
         firstName: firstName,
@@ -216,11 +218,48 @@ function doRegister()
     };
 
 
-    /*
-        BACKEND/PHP REGISTER CONNECTION GOES HERE
-    */
-}
+    try
+    {
+        // Send registration info Register.php
+        const response = await fetch("Register.php",
+        {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
 
+            credentials: "same-origin",
+            body: JSON.stringify(registerData)
+        });
+
+
+        // verify HTTP request hasnt failed, output to HTML-display
+        if (!response.ok)
+        {
+            result.innerHTML = "Registration request has failed.";
+            return;
+        }
+
+
+        const data = await response.json();
+
+
+        // check and display any PHP errors to HTML
+        if (data.error !== "")
+        {
+            result.innerHTML = data.error;
+            return;
+        }
+
+
+
+        result.innerHTML = "Registration successful! You can now log in.";
+    }
+    catch (error)
+    {
+        result.innerHTML = "Server error, registration failed.";
+    }
+}
 
 
 function searchContacts()

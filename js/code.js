@@ -82,15 +82,13 @@ function renderContacts(contacts)
                                 );
 }
 
-window.addEventListener("load", function()
+window.addEventListener("load", function() // login page
 {
-    const introScreen =
-        document.getElementById("introScreen");
+    const introScreen = document.getElementById("introScreen");
 
-    const mainContent =
-        document.getElementById("mainContent");
+    const mainContent = document.getElementById("mainContent");
 
-    if (introScreen && mainContent)
+    if (introScreen && mainContent) // both elements present
     {
         setTimeout(function()
         {
@@ -98,55 +96,32 @@ window.addEventListener("load", function()
 
             mainContent.classList.remove("hidden");
 
-        }, 3000);
+        }, 3000); // timer for login page
     }
 });
 
-
-
-function doLogin()
+function doLogin() // action to submit login info
 {
-    const loginInput =
-        document.getElementById("loginName");
+    const loginInput = document.getElementById("loginName").value.trim; // Katie: trimmed entry
 
-    const passwordInput =
-        document.getElementById("loginPassword");
+    const passwordInput = document.getElementById("loginPassword")?.value; // Katie: password check ?.value
 
-    const result =
-        document.getElementById("loginResult");
-
-
-    if (!loginInput || !passwordInput || !result)
+    // Katie: Codex suggested method to compact and anticipate errors, 9/21
+    if(!login || !password) // ensures if nothing is entered that user told exactly what to do
     {
+        setResult("loginResult", "Please enter your username and password.");
         return;
     }
-
-
-    const login =
-        loginInput.value.trim();
-
-    const password =
-        passwordInput.value;
-
-
-    result.innerHTML = "";
-
-
-    if (login === "" || password === "")
+    try // continue attempt
     {
-        result.innerHTML =
-            "Please enter your username and password.";
-
-        return;
+        await sendRequest("Login.php", { login: login, password: password });
+        window.location.href = "contacts.html"; 
     }
-
-
-    const loginData =
+    catch(error) // error checkpoint
     {
-        login: login,
-        password: password
-    };
-
+        setResult("loginResult", error.message); // send message in event of error
+    }    
+}
 
     /*
         BACKEND/PHP LOGIN CONNECTION GOES HERE

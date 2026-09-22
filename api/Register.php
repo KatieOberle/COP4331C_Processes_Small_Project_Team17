@@ -28,7 +28,6 @@
 		// Create a user with the input information (the ID is handled as an AUTO_INCREMENT)
 		$stmt = $conn->prepare("INSERT into Users (FirstName,LastName,Login,Password) VALUES(?,?,?,?)");
 		$stmt->bind_param("ssss", $firstName, $lastName, $login, $password);
-		$stmt->execute();
 		if (!$stmt->execute())
 		{
 			if ($conn->errno === 1062) // duplicate key

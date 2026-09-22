@@ -46,7 +46,9 @@ session_set_cookie_params([
 			echo json_encode(["results" => [], "error" => "Server error"]);
 			exit;
 		}
-		$result = [];
+
+		$result = $stmt->get_result();
+		$results = [];
 		
 		while($row = $result->fetch_assoc())
 		{
@@ -61,42 +63,9 @@ session_set_cookie_params([
 		}
 
 		header('Content-Type: application/json');
-		echo json_ecode(["results" => $results, "error" => ""]);
-		
-		if( $searchCount == 0 )
-		{
-			returnWithError(200);
-		}
-		else
-		{
-			returnWithInfo( $searchResults );
-		}
-		
+		echo json_encode(["results" => $results, "error" => ""]);
+
 		$stmt->close();
 		$conn->close();
 	}
-
-	function getRequestInfo()
-	{
-		return json_decode(file_get_contents('php://input'), true);
-	}
-
-	function sendResultInfoAsJson( $obj )
-	{
-		header('Content-type: application/json');
-		echo $obj;
-	}
-	
-	function returnWithError( $err )
-	{
-		$retValue = '{"results":[],"error": ' . $err . '}';
-		sendResultInfoAsJson( $retValue );
-	}
-	
-	function returnWithInfo( $searchResults )
-	{
-		$retValue = '{"results":[' . $searchResults . '],"error":""}';
-		sendResultInfoAsJson( $retValue );
-	}
-	
 ?>

@@ -227,7 +227,7 @@ async function searchContacts()
     }
 }
 
-function editContact(contactId)
+function editContact(contact)
 {
     const form = document.getElementById("editContactForm");
     // removed editContactId here since populated later

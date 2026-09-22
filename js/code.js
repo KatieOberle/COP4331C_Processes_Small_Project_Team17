@@ -137,79 +137,32 @@ function doLogin() // action to submit login info
 
 
 
-function doRegister()
+function doRegister() // Katie: updated register action using Codex debugging/recommendations, similar to doLogin improvements, 9/21
 {
-    const firstNameInput =
-        document.getElementById("firstName");
-
-    const lastNameInput =
-        document.getElementById("lastName");
-
-    const loginInput =
-        document.getElementById("registerLogin");
-
-    const passwordInput =
-        document.getElementById("registerPassword");
-
-    const result =
-        document.getElementById("registerResult");
+    const firstName = document.getElementById("firstName")?.value.trim();
+    const lastName = document.getElementById("lastName")?.value.trim();
+    // credentials
+    const login = document.getElementById("registerLogin")?.value.trim();
+    const password = document.getElementById("registerPassword")?.value; // test password
 
 
-    if (
-        !firstNameInput ||
-        !lastNameInput ||
-        !loginInput ||
-        !passwordInput ||
-        !result
-    )
+
+    if (!firstNameInput || !lastName || !login || !password)
     {
-        return;
+        setResult("registerResult","Please fill in all fields."); // feedback
+        return; // exit
     }
-
-
-    const firstName =
-        firstNameInput.value.trim();
-
-    const lastName =
-        lastNameInput.value.trim();
-
-    const login =
-        loginInput.value.trim();
-
-    const password =
-        passwordInput.value;
-
-
-    result.innerHTML = "";
-
-
-    if (
-        firstName === "" ||
-        lastName === "" ||
-        login === "" ||
-        password === ""
-    )
+    try // continue
     {
-        result.innerHTML =
-            "Please fill in all fields.";
-
-        return;
+        await sendRequest("Register.php", {firstName, lastName: lastName, login: login, password: password }); // add user to register PHP
+        setResult("registerResult", "Account created. Log in now."); // feedback
     }
-
-
-    const registerData =
+    catch(error) // error check recommended by Codex v5.6 Terra, 9/21
     {
-        firstName: firstName,
-        lastName: lastName,
-        login: login,
-        password: password
-    };
-
-
-    /*
-        BACKEND/PHP REGISTER CONNECTION GOES HERE
-    */
+        setResult("registerResult", error.message);
+    }
 }
+
 async function addContact() 
 { 
     // html and js must have matching id="references", cannot have mismatches for fname/last/email/phone

@@ -271,7 +271,7 @@ async function saveEditedContact() // Katie: async for "await"
 
     const email = document.getElementById("editEmail")?.value.trim();
 
-    if ( !id || !firstName || !lastName || !phone || !email || !result)
+    if ( !id || !firstName || !lastName || !phone || !email )
     {
         setResult("editContactResult", "Please fill in all fields."); // feedback
         return; // leave unedited fields unedited

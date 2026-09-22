@@ -1,5 +1,13 @@
 <?php
 // 1. Session authentication check
+session_set_cookie_params([
+ 'lifetime' => 0,
+ 'path' => '/',
+ 'secure' => true, // once served over HTTPS
+ 'httponly' => true,
+ 'samesite' => 'Lax',
+]);
+
 session_start();
 if(!isset($_SESSION['userId']))
 {
@@ -12,16 +20,14 @@ if(!isset($_SESSION['userId']))
 $inData = getRequestInfo();
 
 // 3. Read input fields
-$contactId     = trim($inData['id'] ?? '');
 $firstName = trim($inData['firstName'] ?? '');
-$lastName = trim($inData['lastName'] ?? '');
-$email = trim($inData['email'] ?? '');
-$phone = trim($inData['phone'] ?? '');
+$lastName  = trim($inData['lastName'] ?? '');
+$email     = trim($inData['email'] ?? '');
+$phone     = trim($inData['phone'] ?? '');
 $userId    = $_SESSION['userId'];
-$dateCreated = '';
 
 // 4. Input validation
-if($contactId === '')
+if($firstName === '' || $lastName === '' || ($email === '' && $phone === ''))
 {
     http_response_code(400);
     sendJson(["error" => "Missing required field"]);
@@ -39,7 +45,8 @@ if($conn->connect_error)
     exit();
 }
 
-$stmt = $conn->prepare("SELECT * FROM Contacts WHERE ID=? AND UserID=?");
+// 5. Prepared INSERT statement for 5 columns (DateCreated handled by DB default)
+$stmt = $conn->prepare("INSERT INTO Contacts (FirstName, LastName, Email, Phone, UserID) VALUES (?, ?, ?, ?, ?)");
 
 if(!$stmt)
 {
@@ -50,7 +57,7 @@ if(!$stmt)
     exit();
 }
 
-$stmt->bind_param("ii", $contactId, $_SESSION['userId']);
+$stmt->bind_param("ssssi", $firstName, $lastName, $email, $phone, $userId);
 
 if(!$stmt->execute())
 {
@@ -62,61 +69,54 @@ if(!$stmt->execute())
     exit();
 }
 
-// Get current data for selected contact
+// 6. Capture the newly created auto-increment ID
+$newId = (int)$conn->insert_id;
+$stmt->close();
+
+// 7. Query the row back to obtain DateCreated
+$stmt = $conn->prepare("SELECT DateCreated FROM Contacts WHERE ID = ?");
+
+if(!$stmt)
+{
+    http_response_code(500);
+    error_log($conn->error);
+    sendJson(["error" => "Server error"]);
+    $conn->close();
+    exit();
+}
+
+$stmt->bind_param("i", $newId);
+
+if(!$stmt->execute())
+{
+    http_response_code(500);
+    error_log($stmt->error);
+    sendJson(["error" => "Server error"]);
+    $stmt->close();
+    $conn->close();
+    exit();
+}
+
 $result = $stmt->get_result();
 
-// Store current data for all empty entries
-if( $row = $result->fetch_assoc()  )
+$dateCreated = null;
+if($row = $result->fetch_assoc())
 {
-	if($firstName === '')
-		$firstName = $row['FirstName'];
-	if($lastName === '')
-		$lastName = $row['LastName'];
-	if($email === '')
-		$email = $row['Email'];
-	if($phone === '')
-		$phone = $row['Phone'];
-	$dateCreated = $row['DateCreated'];
+    $dateCreated = $row['DateCreated'];
 }
+$stmt->close();
+$conn->close();
 
-// Prepare update statement, then execute
-$stmt = $conn->prepare("UPDATE Contacts 
-	SET FirstName=?, LastName=?, Email=?, Phone=?
-	WHERE ID=? AND userId=?");
-
-if(!$stmt)
-{
-    http_response_code(500);
-    error_log($conn->error);
-    sendJson(["error" => "Server error"]);
-    $conn->close();
-    exit();
-}
-
-$stmt->bind_param("ssssii", $firstName, $lastName, $email, $phone, $contactId, $_SESSION['userId']);
-
-if(!$stmt->execute())
-{
-    http_response_code(500);
-	error_log($stmt->error);
-    sendJson(["error" => "Server error"]);
-    $stmt->close();
-    $conn->close();
-    exit();
-}
-
+// 8. Return created contact payload
 http_response_code(201);
 sendJson([
-    "id"          => $contactId,
+    "id"          => $newId,
     "firstName"   => $firstName,
     "lastName"    => $lastName,
     "email"       => $email,
     "phone"       => $phone,
     "dateCreated" => $dateCreated
 ]);
-
-
-$conn->close();
 
 // Helper Functions
 function getRequestInfo()

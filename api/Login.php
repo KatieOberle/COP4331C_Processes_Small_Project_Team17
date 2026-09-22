@@ -17,9 +17,23 @@
 	else
 	{
 		// Get the ID, name, and HASHED password that match the login
+		$login = trim($inData["login"] ?? '');
+		$password = $inData["password"] ?? '';
+		if ($login === '' || $password === '')
+		{
+			http_response_code(400);
+			returnWithError("Missing username or password");
+			exit();
+		}
 		$stmt = $conn->prepare("SELECT ID,firstName,lastName,Password FROM Users WHERE Login=?");
-		$stmt->bind_param("s", $inData["login"]);
-		$stmt->execute();
+		$stmt->bind_param("s", $login);
+		if (!$stmt->execute())
+		{
+			http_response_code(500);
+			error_log($stmt->error);
+			returnWithError("Server error");
+			exit();
+		}
 		$result = $stmt->get_result();
 
 		if( $row = $result->fetch_assoc()  )
@@ -29,6 +43,7 @@
 
 			if($verify)
 			{
+				session_regenerate_id(true);
 				$_SESSION['userId'] = $row['ID'];
 				returnWithInfo( $row['firstName'], $row['lastName'], $row['ID'] );
 			}

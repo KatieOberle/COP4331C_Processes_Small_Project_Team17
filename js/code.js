@@ -213,6 +213,7 @@ async function searchContacts()
     if (!search) // no search entered
     {
         setResult("searchResult", "Please enter a search term.");
+        return;
     }
     try
     {

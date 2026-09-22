@@ -321,102 +321,45 @@ function editContact(contactId)
 
 function hideEditContactForm()
 {
-    const form =
-        document.getElementById("editContactForm");
+    const form = document.getElementById("editContactForm");
 
-
-    if (form)
+    if (form) // if form is shown then change to hidden
     {
         form.classList.add("hidden");
     }
 }
 
-
-
 function saveEditedContact()
 {
-    const idInput =
-        document.getElementById("editContactId");
+    // Katie: added ?.value() for validation
+    const idInput = document.getElementById("editContactId")?.value; // ID of the edit contact
 
-    const firstNameInput =
-        document.getElementById("editFirstName");
+    const firstNameInput = document.getElementById("editFirstName")?.value.trim();
 
-    const lastNameInput =
-        document.getElementById("editLastName");
+    const lastNameInput = document.getElementById("editLastName")?.value.trim();
 
-    const phoneInput =
-        document.getElementById("editPhone");
+    const phoneInput = document.getElementById("editPhone")?.value.trim();
 
-    const emailInput =
-        document.getElementById("editEmail");
+    const emailInput = document.getElementById("editEmail")?.value.trim();
 
-    const result =
-        document.getElementById("editContactResult");
+    const result = document.getElementById("editContactResult")?.value.trim(); // full card result
 
 
-    if (
-        !idInput ||
-        !firstNameInput ||
-        !lastNameInput ||
-        !phoneInput ||
-        !emailInput ||
-        !result
-    )
+    if ( !idInput || !firstNameInput || !lastNameInput || !phoneInput || !emailInput || !result)
     {
-        return;
+        return; // leave unedited fields unedited
     }
-
-
-    const contactId =
-        idInput.value;
-
-    const firstName =
-        firstNameInput.value.trim();
-
-    const lastName =
-        lastNameInput.value.trim();
-
-    const phone =
-        phoneInput.value.trim();
-
-    const email =
-        emailInput.value.trim();
-
-
-    result.innerHTML = "";
-
-
-    if (
-        contactId === "" ||
-        firstName === "" ||
-        lastName === "" ||
-        phone === "" ||
-        email === ""
-    )
+    try
     {
-        result.innerHTML =
-            "Please fill in all contact fields.";
-
-        return;
+        await sendRequest("EditContact.php", { id: id, firstName: firstName, lastName: lastName, phone: phone, email: email });
+        hideEditContactForm();
+        setResult("searchResult", "Contact updated. Search to refresh list"); // feedback
     }
-
-
-    const editedContactData =
+    catch (error)
     {
-        id: contactId,
-        firstName: firstName,
-        lastName: lastName,
-        phone: phone,
-        email: email
-    };
-
-
-    /*
-        BACKEND/PHP EDIT CONTACT CONNECTION GOES HERE
-    */
+        setResult("editContactResult", error.message);
+    }
 }
-
-
 
 function deleteContact(contactId)
 {

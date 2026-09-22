@@ -200,6 +200,27 @@ async function addContact()
     }
 }
 
+// Katie: improved search contacts query/render, referenced Codex v5.6 Terra
+async function searchContacts()
+{
+    const search = document.getElementById("searchText")?.value.trim();
+    if (!search) // no search entered
+    {
+        setResult("searchResult", "Please enter a search term.");
+    }
+    try
+    {
+        const payload = await sendRequest("SearchContacts.php", { search: search }); // API request
+        const contacts = Array.isArray(payload.results) ? payload.results : []; // set search array
+        renderContacts(contacts); // render available contacts
+        setResult("searchResult", contacts.length ? "" : "No contacts found."); // term does not match any contacts
+    }
+    catch (error) // error catch and message
+    {
+        setResult("searchResult", error.message);
+    }
+}
+
 async function deleteContact(contactId)
 {
     // HTML & javascript must have matching references for id, currently "contactDelete"

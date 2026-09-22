@@ -163,6 +163,25 @@ function doRegister() // Katie: updated register action using Codex debugging/re
     }
 }
 
+// Katie: moved add contact form functions here
+function showAddContactForm()
+{
+    const form = document.getElementById("addContactForm");
+    if (form)
+    {
+        form.classList.remove("hidden");
+    }
+}
+
+function hideAddContactForm()
+{
+    const form = document.getElementById("addContactForm");
+    if (form)
+    {
+        form.classList.add("hidden");
+    }
+}
+
 async function addContact() 
 { 
     // html and js must have matching id="references", cannot have mismatches for fname/last/email/phone
@@ -191,7 +210,7 @@ async function addContact()
         // send json contact to addcontact.php endpoint
         // Katie: 9/22 improved version using new functions, Codex v5.6 Terra
         await sendRequest("AddContact.php", { firstName: firstName, lastName: lastName, email: email, phone: phone });
-        // hideAddContactForm();
+        hideAddContactForm();
         setResult("searchResult", "Contact added. Search to view contacts.");
     }
     catch (error)
@@ -273,123 +292,6 @@ async function deleteContact(contactId)
         result.innerHTML = "Error, failed to delete contact.";
     }
 }
-
-
-
-async function searchContacts()  
-{  
-    // where html and js must match 
-    const searchBox = document.getElementById("searchText");  
- 
-    // where html and js must match 
-    const result = document.getElementById("searchResult");  
-
-    //safety handling to prevent unexpected values from running  
-    if (!searchBox || !result) 
-    {  
-        return;  
-    }  
-  
-    let search = searchBox.value.trim();  
-    let jsonObject;  
-
-    // wiping previous values
-    result.innerHTML = "";
-
-    // stops an empty search from going through
-    if (search === "")
-    {
-        result.innerHTML = "Please enter a search term.";
-        return;
-    }
-
-    const searchData =
-    {
-        search: search
-    };
-  
-    try  
-    {  
-        //api connection, fetch()  
-        let response = await fetch("SearchContacts.php",  
-        {  
-            method: "POST",  
-            headers:  
-            {  
-                "Content-Type": "application/json"  
-            },  
-            body: JSON.stringify(searchData)  
-        });  
-  
-        if (!response.ok)  
-        {  
-            result.textContent = "Search failed.";  
-            return;  
-        }  
-  
-        jsonObject = await response.json();  
-    }  
-    catch (error)  
-    {  
-        result.textContent = "Search failed.";  
-        return;  
-    }  
-
-    // error field provided in php files
-    if (jsonObject.error && jsonObject.error != 200)
-    {
-        result.textContent = "Error, search failed.";
-        return;
-    }
-  
-    // wiping previous values   
-    result.innerHTML = "";  
-  
-    // case for when there are no contacts to be found  
-    if (!Array.isArray(jsonObject.results) ||  
-        jsonObject.results.length === 0)  
-    {  
-        result.textContent = "No contacts found.";  
-        return;  
-    }  
-  
-    // output and display the contacts  
-    for (let contact of jsonObject.results)  
-    {  
-        let entry = document.createElement("p");  
-  
-        entry.textContent = contact.firstName + " " + contact.lastName + " - " + contact.email + " - " + contact.phone;  
-        result.appendChild(entry);  
-    }  
-}
-
-
-function showAddContactForm()
-{
-    const form =
-        document.getElementById("addContactForm");
-
-
-    if (form)
-    {
-        form.classList.remove("hidden");
-    }
-}
-
-
-
-function hideAddContactForm()
-{
-    const form =
-        document.getElementById("addContactForm");
-
-
-    if (form)
-    {
-        form.classList.add("hidden");
-    }
-}
-
 
 function editContact(contactId)
 {

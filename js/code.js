@@ -329,7 +329,7 @@ function hideEditContactForm()
     }
 }
 
-function saveEditedContact()
+sync function saveEditedContact() // Katie: added sync so each step complete before continuing
 {
     // Katie: added ?.value() for validation
     const idInput = document.getElementById("editContactId")?.value; // ID of the edit contact
@@ -410,44 +410,27 @@ function hideDeleteContactForm()
 }
 
 
-
+// Katie: 9/22 connect confirmDeleteContact() to API DeleteContact.php payload
 function confirmDeleteContact()
 {
-    const idInput =
-        document.getElementById("deleteContactId");
+    const id = document.getElementById("deleteContactId")?.value;
 
-    const result =
-        document.getElementById("deleteContactResult");
-
-
-    if (!idInput || !result)
+    if (!id ) // handle result in new function setResult
     {
+        setResult("deleteContactResult", "No contact selected.");
         return;
     }
-
-
-    const contactId =
-        idInput.value;
-
-
-    if (contactId === "")
+    try
     {
-        result.innerHTML =
-            "No contact selected.";
-
-        return;
+        await sendRequest("DeleteContact.php", { id: id }); // connect to API
+        hideDeleteContactForm();
+        renderContacts([]); // render remaining contacts
+        setResult("searchResult", "Contact deleted. Search to refresh list.");
     }
-
-
-    const deleteData =
+    catch (error)
     {
-        id: contactId
-    };
-
-
-    /*
-        BACKEND/PHP DELETE CONTACT CONNECTION GOES HERE
-    */
+        setResult("deleteContactResult", error.message); // error detected and reported
+    }
 }
 
 

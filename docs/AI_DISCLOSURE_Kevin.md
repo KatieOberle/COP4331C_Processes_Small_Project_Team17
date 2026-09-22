@@ -1,7 +1,7 @@
-# AI Disclosure
+# AI Disclosure — Kevin
 
 This project was developed with assistance from generative AI tools.
-Entries are listed by date, newest last.
+Entries are listed by date, oldest first.
 
 ---
 
@@ -26,6 +26,27 @@ Entries are listed by date, newest last.
   `error` field convention, session-based user identity rather than a
   client-supplied `userId`, name-only partial matching, and the
   required/optional field rules.
+
+---
+
+## AddContact.php — September 6, 2026
+
+- **Tool**: Claude (Anthropic, claude.ai)
+- **Scope**: Code review, debugging, and explanation of mysqli error
+  handling and retrieval of database-generated values
+- **Use**: I wrote the initial and all subsequent versions of
+  `AddContact.php` myself, working from the endpoint contract in my Contact
+  API Structure document. AI reviewed each draft and identified defects,
+  which I then corrected: internal MySQL error messages being returned to
+  the client instead of a generic message, an unguarded `prepare()` call
+  that would cause a fatal error on failure, an operator precedence issue
+  in the validation condition, and `execute()` being called before
+  `bind_param()`. AI also explained `mysqli::$insert_id` and the pattern of
+  querying back database-generated values (`AUTO_INCREMENT` id and
+  `DEFAULT CURRENT_TIMESTAMP`) rather than reconstructing them in
+  application code.
+- **My decisions**: Adding a follow-up `SELECT` to return the
+  database-generated values.
 
 ---
 

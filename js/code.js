@@ -102,7 +102,7 @@ window.addEventListener("load", function() // login page
     }
 });
 
-function doLogin() // action to submit login info
+async function doLogin() // action to submit login info, Katie: 9/22 added async for "await"
 {
     const loginInput = document.getElementById("loginName").value.trim; // Katie: trimmed entry
 
@@ -125,21 +125,7 @@ function doLogin() // action to submit login info
     }    
 }
 
-    /*
-        BACKEND/PHP LOGIN CONNECTION GOES HERE
-
-        Example future call:
-
-        sendRequest("Login.php", loginData);
-
-        Session cookie will be included automatically
-        by sendRequest().
-    */
-}
-
-
-
-function doRegister() // Katie: updated register action using Codex debugging/recommendations, similar to doLogin improvements, 9/21
+async function doRegister() // Katie: updated register action using Codex debugging/recommendations, similar to doLogin improvements, 9/21
 {
     const firstName = document.getElementById("firstName")?.value.trim();
     const lastName = document.getElementById("lastName")?.value.trim();
@@ -331,7 +317,7 @@ function hideEditContactForm()
     }
 }
 
-sync function saveEditedContact() // Katie: added sync so each step complete before continuing
+async function saveEditedContact() // Katie: async for "await"
 {
     // Katie: added ?.value() for validation
     const idInput = document.getElementById("editContactId")?.value; // ID of the edit contact
@@ -413,7 +399,7 @@ function hideDeleteContactForm()
 
 
 // Katie: 9/22 connect confirmDeleteContact() to API DeleteContact.php payload
-function confirmDeleteContact()
+async function confirmDeleteContact()
 {
     const id = document.getElementById("deleteContactId")?.value;
 

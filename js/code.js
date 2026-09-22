@@ -9,8 +9,7 @@ const API_BASE = "../api"; // droplet API directory
 
 async function sendRequest(endpoint, data)
 {
-    const response = await fetch(
-        API_BASE + "/" + endpoint,
+    const response = await fetch(API_BASE + "/" + endpoint,
         {
             // JSON request
             method: "POST",
@@ -49,7 +48,7 @@ function setResult(id, message) // customize id desired and message
 // Katie: 9/21, add method to have edit/delete buttons attached to new contacts listed in manager, Codex assisted v5.6 Terra
 function renderContacts(contacts)
 {
-    const contactList = document.getElementByID("contactList"); // connect existing contacts
+    const contactList = document.getElementById("contactList"); // connect existing contacts
     if(!contactList) // if no list
     {
         return; // exit
@@ -104,9 +103,9 @@ window.addEventListener("load", function() // login page
 
 async function doLogin() // action to submit login info, Katie: 9/22 added async for "await"
 {
-    const loginInput = document.getElementById("loginName").value.trim; // Katie: trimmed entry
+    const login = document.getElementById("loginName").value.trim(); // Katie: trimmed entry
 
-    const passwordInput = document.getElementById("loginPassword")?.value; // Katie: password check ?.value
+    const password = document.getElementById("loginPassword")?.value; // Katie: password check ?.value
 
     // Katie: Codex suggested method to compact and anticipate errors, 9/21
     if(!login || !password) // ensures if nothing is entered that user told exactly what to do
@@ -135,7 +134,7 @@ async function doRegister() // Katie: updated register action using Codex debugg
 
 
 
-    if (!firstNameInput || !lastName || !login || !password)
+    if (!firstName || !lastName || !login || !password)
     {
         setResult("registerResult","Please fill in all fields."); // feedback
         return; // exit
@@ -181,13 +180,13 @@ async function addContact()
     let firstName = document.getElementById("contactFirstName").value.trim(); 
     let lastName = document.getElementById("contactLastName").value.trim(); 
     let email = document.getElementById("contactEmail").value.trim(); 
-    let phoneNumber = document.getElementById("contactPhone").value.trim(); 
+    let phone = document.getElementById("contactPhone").value.trim(); 
 
  
     // Copied strict equality from php  
     // asks for fname+lname and either email/pass 
     // Katie: 9/22, removed "=== """ and replaced with "!"
-    if (!firstName || !lastName || !email || !phoneNumber ) 
+    if (!firstName || !lastName || !email || !phone ) 
     { 
         // Katie: adjusted result ID to match contacts.html, advised by Claude Sonnet v5
         setResult("addContactResult", "Enter a first and last name, email, and phone number");
@@ -228,73 +227,14 @@ async function searchContacts()
     }
 }
 
-async function deleteContact(contactId)
-{
-    // HTML & javascript must have matching references for id, currently "contactDelete"
-    const result = document.getElementById("contactDelete");
-
-    if (!result)
-    {
-        return;
-    }
-
-    let contact =
-    {
-        id: contactId
-    };
-
-    try
-    {
-        const response = await fetch("DeleteContact.php",
-        {
-            method: "POST",
-            headers:
-            {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify(contact)
-        });
-
-        // Json from the php
-        let jsonObject = await response.json();
-
-        // Ensure there are no php/html errors
-        if (!response.ok || jsonObject.error)
-        {
-            result.innerHTML = jsonObject.error || "Failed to delete contact, error.";
-            return;
-        }
-
-        // an edgecase check if php isnt returning a deleted id
-        if (jsonObject.id != contactId)
-        {
-            result.innerHTML = "Failed to delete contact, error.";
-            return;
-        }
-
-        result.innerHTML = "Contact deleted.";
-        searchContacts();
-    }
-    catch (error)
-    {
-        result.innerHTML = "Error, failed to delete contact.";
-    }
-}
-
 function editContact(contactId)
 {
     const form = document.getElementById("editContactForm");
-
-    const idInput = document.getElementById("editContactId");
-
-    if (!form || !idInput)
+    // removed editContactId here since populated later
+    if (!form )
     {
         return;
     }
-
-    idInput.value = contactId;
-
-    form.classList.remove("hidden");
 
     // Katie: populating form with API payload
     document.getElementById("editContactId").value = contact.id;
@@ -302,7 +242,8 @@ function editContact(contactId)
     document.getElementById("editLastName").value = contact.lastName;
     document.getElementById("editPhone").value = contact.phone;
     document.getElementById("editEmail").value = contact.email;
-    document.getElementById("editContactForm").value = contact.remove("hidden");
+
+    form.classList.remove("hidden");
 }
 
 
@@ -320,21 +261,19 @@ function hideEditContactForm()
 async function saveEditedContact() // Katie: async for "await"
 {
     // Katie: added ?.value() for validation
-    const idInput = document.getElementById("editContactId")?.value; // ID of the edit contact
+    const id = document.getElementById("editContactId")?.value; // ID of the edit contact
 
-    const firstNameInput = document.getElementById("editFirstName")?.value.trim();
+    const firstName = document.getElementById("editFirstName")?.value.trim();
 
-    const lastNameInput = document.getElementById("editLastName")?.value.trim();
+    const lastName = document.getElementById("editLastName")?.value.trim();
 
-    const phoneInput = document.getElementById("editPhone")?.value.trim();
+    const phone = document.getElementById("editPhone")?.value.trim();
 
-    const emailInput = document.getElementById("editEmail")?.value.trim();
+    const email = document.getElementById("editEmail")?.value.trim();
 
-    const result = document.getElementById("editContactResult")?.value.trim(); // full card result
-
-
-    if ( !idInput || !firstNameInput || !lastNameInput || !phoneInput || !emailInput || !result)
+    if ( !id || !firstName || !lastName || !phone || !email || !result)
     {
+        setResult("editContactResult", "Please fill in all fields."); // feedback
         return; // leave unedited fields unedited
     }
     try
@@ -351,23 +290,20 @@ async function saveEditedContact() // Katie: async for "await"
 
 function deleteContact(contactId)
 {
-    const form =
-        document.getElementById("deleteContactForm");
+    const form = document.getElementById("deleteContactForm");
 
-    const idInput =
-        document.getElementById("deleteContactId");
+    const id = document.getElementById("deleteContactId");
 
-    const result =
-        document.getElementById("deleteContactResult");
+    const result = document.getElementById("deleteContactResult");
 
 
-    if (!form || !idInput || !result)
+    if (!form || !id || !result)
     {
         return;
     }
 
 
-    idInput.value = contactId;
+    id.value = contactId;
 
     result.innerHTML = "";
 
@@ -378,11 +314,9 @@ function deleteContact(contactId)
 
 function hideDeleteContactForm()
 {
-    const form =
-        document.getElementById("deleteContactForm");
+    const form = document.getElementById("deleteContactForm");
 
-    const idInput =
-        document.getElementById("deleteContactId");
+    const id = document.getElementById("deleteContactId");
 
 
     if (form)
@@ -391,9 +325,9 @@ function hideDeleteContactForm()
     }
 
 
-    if (idInput)
+    if (id)
     {
-        idInput.value = "";
+        id.value = "";
     }
 }
 

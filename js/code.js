@@ -346,7 +346,7 @@ async function confirmDeleteContact()
     {
         await sendRequest("DeleteContact.php", { id: id }); // connect to API
         hideDeleteContactForm();
-        renderContacts([]); // render remaining contacts
+        searchContacts(); // list refresh instead of render (render blanks list)
         setResult("searchResult", "Contact deleted. Search to refresh list.");
     }
     catch (error)

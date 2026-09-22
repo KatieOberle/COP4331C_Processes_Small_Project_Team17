@@ -179,48 +179,25 @@ async function addContact()
  
     // Copied strict equality from php  
     // asks for fname+lname and either email/pass 
-    if (firstName === "" || lastName === "" || 
-        (email === "" && phoneNumber === "") 
-    ) 
+    // Katie: 9/22, removed "=== """ and replaced with "!"
+    if (!firstName || !lastName || !email || !phoneNumber ) 
     { 
         // Katie: adjusted result ID to match contacts.html, advised by Claude Sonnet v5
-        document.getElementById("addContactResult").innerHTML = "Enter a first and last name, and either their email or phone number."; 
+        setResult("addContactResult", "Enter a first and last name, email, and phone number");
         return; 
     } 
-   
     try 
     { 
-        // send json contact to addcontact.php endpoint 
-        const response = await fetch("AddContact.php", 
-        { 
-            method: "POST", 
-            headers: { "Content-Type": "application/json" }, 
-            body: JSON.stringify({ 
-                firstName: firstName, 
-                lastName: lastName, 
-                email: email, 
-                phone: phoneNumber 
-            })
-        }); 
- 
-
-        const data = await response.json(); 
-        // Ensure there are no php/html errors
-        if (!response.ok || data.error) 
-        { 
-            document.getElementById("result").innerHTML = data.error || "Unable to add contact, error."; 
-            return; 
-        } 
-
-        document.getElementById("result").innerHTML = "Contact added successfully."; 
-        console.log("New contact:", data); 
-    } 
-
-    //fallback error code 
-    catch (error) 
-    { 
-        document.getElementById("result").innerHTML = "Error, Failed to add contact."; 
-    } 
+        // send json contact to addcontact.php endpoint
+        // Katie: 9/22 improved version using new functions, Codex v5.6 Terra
+        await sendRequest("AddContact.php", { firstName: firstName, lastName: lastName, email: email, phone: phone });
+        // hideAddContactForm();
+        setResult("searchResult", "Contact added. Search to view contacts.");
+    }
+    catch (error)
+    {
+        setResult("addContactResult", error.message); // error message output
+    }
 }
 
 async function deleteContact(contactId)

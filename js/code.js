@@ -295,27 +295,26 @@ async function deleteContact(contactId)
 
 function editContact(contactId)
 {
-    const form =
-        document.getElementById("editContactForm");
+    const form = document.getElementById("editContactForm");
 
-    const idInput =
-        document.getElementById("editContactId");
-
+    const idInput = document.getElementById("editContactId");
 
     if (!form || !idInput)
     {
         return;
     }
 
-
     idInput.value = contactId;
 
     form.classList.remove("hidden");
 
-
-    /*
-        BACKEND/PHP GET CONTACT DATA GOES HERE
-    */
+    // Katie: populating form with API payload
+    document.getElementById("editContactId").value = contact.id;
+    document.getElementById("editFirstName").value = contact.firstName;
+    document.getElementById("editLastName").value = contact.lastName;
+    document.getElementById("editPhone").value = contact.phone;
+    document.getElementById("editEmail").value = contact.email;
+    document.getElementById("editContactForm").value = contact.remove("hidden");
 }
 
 

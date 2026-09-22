@@ -44,6 +44,43 @@ function setResult(id, message) // customize id desired and message
     }
 }
 
+// Katie: 9/21, add method to have edit/delete buttons attached to new contacts listed in manager, Codex assisted v5.6 Terra
+function renderContacts(contacts)
+{
+    const contactList = document.getElementByID("contactList"); // connect existing contacts
+    if(!contactList) // if no list
+    {
+        return; // exit
+    }
+    contactList.replaceChildren(...contacts.map(function(contact)
+                                                {
+                                                    const card = document.createElement("div"); // create new card space
+                                                    const details = document.createElement("div"); // details to hold name and info
+                                                    const name = document.createElement("h3"); // name is header
+                                                    const info = document.createElement("div"); // contact information
+                                                    const actions = document.createElement("div"); // actions to hold buttons
+                                                    const editButton = document.createElement("button"); // edit contact
+                                                    const deleteButton = document.createElement("button"); // delete contact
+
+                                                    // html name assignments, assisted by Codex search 9/21
+                                                    card.className = "contact-card";
+                                                    actions.className = "contact-actions";
+                                                    editButton.className = "edit-button";
+                                                    deleteButton.className = "delete-button";
+                                                    name.textContent = contact.firstName + " " + contact.lastName; // format name string
+                                                    info.textContent = [contact.email, contact.phone].filter(Boolean).join(" . "); // include respective info
+                                                    editButton.textContent = "Edit";
+                                                    deleteButton.textContent = "Delete";
+                                                    editButton.addEventListener("click", function() { editContact(contact); }); // listen for user to edit
+                                                    deleteButton.addEventListener("click", function() { deleteContact(contact.id); }); // listen for user to delete
+                                                    details.append(name, info); // name and info included under details within card
+                                                    actions.append(editButton, deleteButton); // actions hold interactive buttons
+                                                    card.append(details, actions);
+
+                                                    return card; // return completed card
+                                                })
+                                );
+}
 
 window.addEventListener("load", function()
 {

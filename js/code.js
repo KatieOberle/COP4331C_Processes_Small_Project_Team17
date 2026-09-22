@@ -1,9 +1,11 @@
-/*
-    Backend URL will be added when the PHP
-    endpoints are connected.
+// File purpose: update frontend based on API/database and implement required functions for
+//                adding contacts, deleting contacts, editing contacts, and searching contacts
+// Authors: Wilkenson Pierre, Sylus Perez, Katherine (Katie) Oberle
 
-*/
-const API_BASE = "BACKEND/PHP";
+// Disclosure: Improvements, debugging, refactoring, etc. contributed by AI tools
+// (All AI usage is cited in line comments and in the README
+
+const API_BASE = "../api"; // droplet API directory
 
 async function sendRequest(endpoint, data)
 {
@@ -437,10 +439,5 @@ function confirmDeleteContact()
 
 function logout()
 {
-    /*
-        BACKEND/PHP LOGOUT ENDPOINT GOES HERE.
-
-    */
-
     window.location.href = "index.html";
 }

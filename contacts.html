@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Contact Manager</title>
+
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+
+<body>
+
+    <nav class="navbar">
+        <h2>Contact Manager</h2>
+
+        <button onclick="logout()">
+            Logout
+        </button>
+    </nav>
+
+
+    <main class="dashboard">
+
+        <div class="dashboard-header">
+
+            <div>
+                <h1>My Contacts</h1>
+
+                <p>
+                    Search and manage your contacts
+                </p>
+            </div>
+
+            <button
+                class="add-button"
+                onclick="showAddContactForm()"
+            >
+                + Add Contact
+            </button>
+
+        </div>
+
+
+        <div class="search-container">
+
+            <input
+                type="text"
+                id="searchText"
+                placeholder="Search contacts..."
+            >
+
+            <button onclick="searchContacts()">
+                Search
+            </button>
+
+        </div>
+
+        <p id="searchResult"></p>
+
+
+        <!-- ADD CONTACT FORM -->
+        <div
+            id="addContactForm"
+            class="contact-form hidden"
+        >
+
+            <h2>Add Contact</h2>
+
+            <div class="form-group">
+                <label for="contactFirstName">
+                    First Name
+                </label>
+
+                <input
+                    type="text"
+                    id="contactFirstName"
+                    placeholder="First name"
+                >
+            </div>
+
+
+            <div class="form-group">
+                <label for="contactLastName">
+                    Last Name
+                </label>
+
+                <input
+                    type="text"
+                    id="contactLastName"
+                    placeholder="Last name"
+                >
+            </div>
+
+
+            <div class="form-group">
+                <label for="contactPhone">
+                    Phone
+                </label>
+
+                <input
+                    type="text"
+                    id="contactPhone"
+                    placeholder="Phone number"
+                >
+            </div>
+
+
+            <div class="form-group">
+                <label for="contactEmail">
+                    Email
+                </label>
+
+                <input
+                    type="email"
+                    id="contactEmail"
+                    placeholder="Email address"
+                >
+            </div>
+
+
+            <div class="contact-form-buttons">
+
+                <button onclick="addContact()">
+                    Save Contact
+                </button>
+
+                <button onclick="hideAddContactForm()">
+                    Cancel
+                </button>
+
+            </div>
+
+
+            <p id="addContactResult"></p>
+
+        </div>
+
+
+        <!-- EDIT CONTACT FORM -->
+        <div
+            id="editContactForm"
+            class="contact-form hidden"
+        >
+
+            <h2>Edit Contact</h2>
+
+            <input
+                type="hidden"
+                id="editContactId"
+            >
+
+            <div class="form-group">
+                <label for="editFirstName">
+                    First Name
+                </label>
+
+                <input
+                    type="text"
+                    id="editFirstName"
+                    placeholder="First name"
+                >
+            </div>
+
+
+            <div class="form-group">
+                <label for="editLastName">
+                    Last Name
+                </label>
+
+                <input
+                    type="text"
+                    id="editLastName"
+                    placeholder="Last name"
+                >
+            </div>
+
+
+            <div class="form-group">
+                <label for="editPhone">
+                    Phone
+                </label>
+
+                <input
+                    type="text"
+                    id="editPhone"
+                    placeholder="Phone number"
+                >
+            </div>
+
+
+            <div class="form-group">
+                <label for="editEmail">
+                    Email
+                </label>
+
+                <input
+                    type="email"
+                    id="editEmail"
+                    placeholder="Email address"
+                >
+            </div>
+
+
+            <div class="contact-form-buttons">
+
+                <button onclick="saveEditedContact()">
+                    Save Changes
+                </button>
+
+                <button onclick="hideEditContactForm()">
+                    Cancel
+                </button>
+
+            </div>
+
+
+            <p id="editContactResult"></p>
+
+        </div>
+
+
+        <!-- DELETE CONTACT CONFIRMATION -->
+        <div
+            id="deleteContactForm"
+            class="contact-form hidden"
+        >
+
+            <h2>Delete Contact</h2>
+
+            <p>
+                Are you sure you want to delete this contact?
+            </p>
+
+            <input
+                type="hidden"
+                id="deleteContactId"
+            >
+
+            <div class="contact-form-buttons">
+
+                <button onclick="confirmDeleteContact()">
+                    Delete
+                </button>
+
+                <button onclick="hideDeleteContactForm()">
+                    Cancel
+                </button>
+
+            </div>
+
+            <p id="deleteContactResult"></p>
+
+        </div>
+
+
+        <!-- Real contacts from backend go here -->
+        <div
+            class="contact-list"
+            id="contactList"
+        >
+        </div>
+
+    </main>
+
+
+    <script src="js/code.js"></script>
+
+</body>
+
+</html>

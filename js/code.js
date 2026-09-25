@@ -32,17 +32,11 @@ async function sendRequest(endpoint, data)
 }
 
 
-// Disclosure: Improvements, debugging, refactoring, etc. contributed by AI tools
-// (All AI usage is cited in line comments and in the README
 
-const API_BASE = "../api"; // droplet API directory
-
-async function sendRequest(endpoint, data)
+window.addEventListener("load", function()
 {
-    const response = await fetch(API_BASE + "/" + endpoint,
-        {
-            // JSON request
-            method: "POST",
+    const introScreen =
+        document.getElementById("introScreen");
 
     const mainContent =
         document.getElementById("mainContent");
@@ -72,7 +66,6 @@ function doLogin()
     const result =
         document.getElementById("loginResult");
 
-    const password = document.getElementById("loginPassword")?.value; // Katie: password check ?.value
 
     if (!loginInput || !passwordInput || !result)
     {
@@ -95,125 +88,9 @@ function doLogin()
         result.innerHTML =
             "Please enter your username and password.";
 
-async function doRegister() // Katie: updated register action using Codex debugging/recommendations, similar to doLogin improvements, 9/21
-{
-    const firstName = document.getElementById("firstName")?.value.trim();
-    const lastName = document.getElementById("lastName")?.value.trim();
-    // credentials
-    const login = document.getElementById("registerLogin")?.value.trim();
-    const password = document.getElementById("registerPassword")?.value; // test password
-
-
-
-    if (!firstName || !lastName || !login || !password)
-    {
-        setResult("registerResult","Please fill in all fields."); // feedback
-        return; // exit
-    }
-    try // continue
-    {
-        await sendRequest("Register.php", {firstName, lastName: lastName, login: login, password: password }); // add user to register PHP
-        setResult("registerResult", "Account created. Log in now."); // feedback
-    }
-    catch(error) // error check recommended by Codex v5.6 Terra, 9/21
-    {
-        setResult("registerResult", error.message);
-    }
-}
-
-// Katie: moved add contact form functions here
-function showAddContactForm()
-{
-    const form = document.getElementById("addContactForm");
-    if (form)
-    {
-        form.classList.remove("hidden");
-    }
-}
-
-function hideAddContactForm()
-{
-    const form = document.getElementById("addContactForm");
-    if (form)
-    {
-        form.classList.add("hidden");
-    }
-}
-
-async function addContact() 
-{ 
-    // html and js must have matching id="references", cannot have mismatches for fname/last/email/phone
-    //pull needeed contact data name,email,phone 
-
-    // Katie: adjustments ensure matching between javascript and html files
-
-    // Katie: adjusted contact info ID's for name, email, and phone to match contacts.html, advised by Claude Sonnet v5
-    let firstName = document.getElementById("contactFirstName").value.trim(); 
-    let lastName = document.getElementById("contactLastName").value.trim(); 
-    let email = document.getElementById("contactEmail").value.trim(); 
-    let phone = document.getElementById("contactPhone").value.trim(); 
-
- 
-    // Copied strict equality from php  
-    // asks for fname+lname and either email/pass 
-    // Katie: 9/22, removed "=== """ and replaced with "!"
-    if (!firstName || !lastName || !email || !phone ) 
-    { 
-        // Katie: adjusted result ID to match contacts.html, advised by Claude Sonnet v5
-        setResult("addContactResult", "Enter a first and last name, email, and phone number");
-        return; 
-    } 
-    try 
-    { 
-        // send json contact to addcontact.php endpoint
-        // Katie: 9/22 improved version using new functions, Codex v5.6 Terra
-        await sendRequest("AddContact.php", { firstName: firstName, lastName: lastName, email: email, phone: phone });
-        hideAddContactForm();
-        setResult("searchResult", "Contact added. Search to view contacts.");
-    }
-    catch (error)
-    {
-        setResult("addContactResult", error.message); // error message output
-    }
-}
-
-// Katie: improved search contacts query/render, referenced Codex v5.6 Terra
-async function searchContacts()
-{
-    const search = document.getElementById("searchText")?.value.trim();
-    if (!search) // no search entered
-    {
-        setResult("searchResult", "Please enter a search term.");
-        return;
-    }
-    try
-    {
-        const payload = await sendRequest("SearchContacts.php", { search: search }); // API request
-        const contacts = Array.isArray(payload.results) ? payload.results : []; // set search array
-        renderContacts(contacts); // render available contacts
-        setResult("searchResult", contacts.length ? "" : "No contacts found."); // term does not match any contacts
-    }
-    catch (error) // error catch and message
-    {
-        setResult("searchResult", error.message);
-    }
-}
-
-function editContact(contact)
-{
-    const form = document.getElementById("editContactForm");
-    // removed editContactId here since populated later
-    if (!form )
-    {
         return;
     }
 
-    // Katie: populating form with API payload
-    document.getElementById("editContactId").value = contact.id;
-    document.getElementById("editFirstName").value = contact.firstName;
-    document.getElementById("editLastName").value = contact.lastName;
-    document.getElementById("editPhone").value = contact.phone;
-    document.getElementById("editEmail").value = contact.email;
 
     const loginData =
     {
@@ -553,7 +430,6 @@ function editContact(contactId)
 
     form.classList.remove("hidden");
 
-    result.innerHTML = "";
 
     /*
         BACKEND/PHP GET CONTACT DATA GOES HERE
@@ -567,44 +443,6 @@ function hideEditContactForm()
     const form =
         document.getElementById("editContactForm");
 
-    const id = document.getElementById("deleteContactId");
-
-
-    if (form)
-    {
-        form.classList.add("hidden");
-    }
-
-
-    if (id)
-    {
-        id.value = "";
-    }
-}
-
-
-// Katie: 9/22 connect confirmDeleteContact() to API DeleteContact.php payload
-async function confirmDeleteContact()
-{
-    const id = document.getElementById("deleteContactId")?.value;
-
-    if (!id ) // handle result in new function setResult
-    {
-        setResult("deleteContactResult", "No contact selected.");
-        return;
-    }
-    try
-    {
-        await sendRequest("DeleteContact.php", { id: id }); // connect to API
-        hideDeleteContactForm();
-        searchContacts(); // list refresh instead of render (render blanks list)
-        setResult("searchResult", "Contact deleted. Search to refresh list.");
-    }
-    catch (error)
-    {
-        setResult("deleteContactResult", error.message); // error detected and reported
-    }
-}
 
     if (form)
     {

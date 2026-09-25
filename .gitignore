@@ -1,9 +1,0 @@
-# Credentials — never commit
-config.php
-
-# Vim swap files
-*.swp
-*.swo
-
-# macOS
-.DS_Store

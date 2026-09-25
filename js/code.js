@@ -141,30 +141,29 @@ function doRegister()
     {
         return;
     }
+const firstName = firstNameInput.value.trim();
+const lastName = lastNameInput.value.trim();
+const login = loginInput.value.trim();
+const password = passwordInput.value;
 
+result.innerHTML = "";
 
-    const firstName =
-        firstNameInput.value.trim();
+if (
+    firstName === "" ||
+    lastName === "" ||
+    login === "" ||
+    password === ""
+)
+{
+    result.innerHTML = "Please fill in all fields.";
+    return;
+}
 
-    const lastName =
-        lastNameInput.value.trim();
-
-    const login =
-        loginInput.value.trim();
-
-    const password =
-        passwordInput.value;
-
-
-    result.innerHTML = "";
-
-
-    if (
-        firstName === "" ||
-        lastName === "" ||
-        login === "" ||
-        password === ""
-    )
+if (login.length > 12)
+{
+    result.innerHTML = "Username cannot exceed 12 characters.";
+    return;
+}
     {
         result.innerHTML =
             "Please fill in all fields.";

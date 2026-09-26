@@ -25,22 +25,37 @@
 	} 
 	else
 	{
+		// Check if username is already taken
+		$stmt = $conn->prepare("SELECT * from Users WHERE Login=?");
+		$stmt->bind_param("s", $login);
+
+		if(!$stmt->execute())
+		{
+			http_response_code(500);
+			error_log($stmt->error);
+			sendJson(["error" => "Server error"]);
+			$stmt->close();
+			$conn->close();
+			exit();
+		}
+
+		// Get current data for selected contact
+		$result = $stmt->get_result();
+		if( $row = $result->fetch_assoc()  )
+		{
+			if($row['Login'] !== '')
+				returnWithError("Username already taken");
+
+		}
+
 		// Create a user with the input information (the ID is handled as an AUTO_INCREMENT)
 		$stmt = $conn->prepare("INSERT into Users (FirstName,LastName,Login,Password) VALUES(?,?,?,?)");
 		$stmt->bind_param("ssss", $firstName, $lastName, $login, $password);
 		if (!$stmt->execute())
 		{
-			if ($conn->errno === 1062) // duplicate key
-			{
-				http_response_code(409);
-				returnWithError("Username already taken");
-			}
-			else
-			{
-				http_response_code(500);
-				error_log($stmt->error);
-				returnWithError("Server error");
-			}
+			http_response_code(500);
+			error_log($stmt->error);
+			returnWithError("Server error");
 			$stmt->close();
 			$conn->close();
 			exit();
@@ -48,6 +63,7 @@
 		$stmt->close();
 		$conn->close();
 		returnWithError("");
+
 	}
 
 	function getRequestInfo()

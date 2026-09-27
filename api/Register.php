@@ -5,8 +5,10 @@
 	$lastName = trim($inData["lastName"] ?? '');
 	$login = trim($inData["login"] ?? '');
 	$passwordRaw = $inData["password"];
-
-	if ($firstName === '' | $lastName === '' | $login === '' | $passwordRaw === '')
+	$email = trim($inData["email"] ?? '');
+	$phone = trim($inData["phone"] ?? '');
+	if ($firstName === '' | $lastName === '' | $login === '' | $passwordRaw === '' |
+            $email === '' | $phone === '')
 	{
 		http_response_code(400);
 		returnWithError("Missing required field");
@@ -27,7 +29,7 @@
 	{
 		// Create a user with the input information (the ID is handled as an AUTO_INCREMENT)
 		$stmt = $conn->prepare("INSERT into Users (FirstName,LastName,Login,Password) VALUES(?,?,?,?)");
-		$stmt->bind_param("ssss", $firstName, $lastName, $login, $password);
+		$stmt->bind_param("ssss", $firstName, $lastName, $login, $password, $email, $phone);
 		if (!$stmt->execute())
 		{
 			if ($conn->errno === 1062) // duplicate key

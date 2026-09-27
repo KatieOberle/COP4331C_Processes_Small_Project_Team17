@@ -132,9 +132,10 @@ async function doRegister() // Katie: updated register action using Codex debugg
     const login = document.getElementById("registerLogin")?.value.trim();
     const password = document.getElementById("registerPassword")?.value; // test password
 
+    const email = document.getElementById("registerEmail")?.value.trim();
+    const passwordConfirm = document.getElementById("registerPasswordConfirm")?.value;
 
-
-    if (!firstName || !lastName || !login || !password)
+    if (!firstName || !lastName || !login || !password || !email || !phone)
     {
         setResult("registerResult","Please fill in all fields."); // feedback
         return; // exit
